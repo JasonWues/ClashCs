@@ -1,0 +1,63 @@
+﻿@page "/Profiles"
+@inject IHttpClientFactory ClientFactory
+@inject ISnackbar Snackbar
+@using ClashCs.Server.Model;
+@using YamlDotNet.Serialization;
+@using YamlDotNet.Serialization.NamingConventions;
+
+<PageTitle>Profiles</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+
+    <div class="d-flex flex-row align-center gap-x-6">
+        <MudTextField Class="flex-grow-2" T="string" @bind-Text="SubscriptionLink" Label="Subscription Link" Variant="Variant.Outlined"></MudTextField>
+        <MudButton Class="flex-grow-1" Disabled="@_processing" Variant="Variant.Filled" Style="height: 52px" OnClick="@getClashConfigAsync">
+            @if (_processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Processing</MudText>
+            }
+            else
+            {
+                <MudText>Download</MudText>
+            }
+        </MudButton>
+        <MudButton Class="flex-grow-1" Variant="Variant.Filled" Style="height: 52px">Update All</MudButton>
+    </div>
+
+    
+</MudContainer>
+
+@code {
+    public string? SubscriptionLink { get; set; }
+    private bool _processing = false;
+
+    protected async Task getClashConfigAsync()
+    {
+        if (!string.IsNullOrEmpty(SubscriptionLink))
+        {
+            _processing = true;
+            var client = ClientFactory.CreateClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34");
+            var uri = new Uri(SubscriptionLink.Replace('\t', ' ').Trim());
+            var response = await client.GetAsync(uri);
+            response.EnsureSuccessStatusCode();
+            var filename = response.Content.Headers.ContentDisposition.FileName;
+            var yaml = await response.Content.ReadAsStringAsync();
+
+            var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .IgnoreUnmatchedProperties()
+            .Build();
+
+            var profileInfo = deserializer.Deserialize<Config>(yaml);
+            _processing = false;
+        }
+        else
+        {
+            Snackbar.Configuration.PositionClass = "Defaults.Classes.Position.TopStart";
+            Snackbar.Add("请输入链接", Severity.Normal);
+        }
+
+    }
+}
