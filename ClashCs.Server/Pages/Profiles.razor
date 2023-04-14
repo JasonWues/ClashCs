@@ -1,9 +1,10 @@
 ﻿@page "/Profiles"
+@using YamlDotNet.Serialization
+@using YamlDotNet.Serialization.NamingConventions
+@using ClashCs.Server.Model
+@using System.Text
 @inject IHttpClientFactory ClientFactory
 @inject ISnackbar Snackbar
-@using ClashCs.Server.Model;
-@using YamlDotNet.Serialization;
-@using YamlDotNet.Serialization.NamingConventions;
 
 <PageTitle>Profiles</PageTitle>
 
@@ -14,7 +15,7 @@
         <MudButton Class="flex-grow-1" Disabled="@_processing" Variant="Variant.Filled" Style="height: 52px" OnClick="@getClashConfigAsync">
             @if (_processing)
             {
-                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
                 <MudText Class="ms-2">Processing</MudText>
             }
             else
@@ -25,12 +26,12 @@
         <MudButton Class="flex-grow-1" Variant="Variant.Filled" Style="height: 52px">Update All</MudButton>
     </div>
 
-    
+
 </MudContainer>
 
 @code {
     public string? SubscriptionLink { get; set; }
-    private bool _processing = false;
+    private bool _processing;
 
     protected async Task getClashConfigAsync()
     {
@@ -46,18 +47,30 @@
             var yaml = await response.Content.ReadAsStringAsync();
 
             var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .IgnoreUnmatchedProperties()
-            .Build();
+                .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                .IgnoreUnmatchedProperties()
+                .Build();
 
             var profileInfo = deserializer.Deserialize<Config>(yaml);
+            var random = new Random();
+            var randomNum = random.Next(10000000, 19999999);
+            var stringBuilder = new StringBuilder(13);
+            stringBuilder.Append(randomNum).Append(".yaml");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Config", "Profiles");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            
+            await File.WriteAllTextAsync(Path.Combine(path,stringBuilder.ToString()), yaml, Encoding.UTF8);
+
             _processing = false;
         }
         else
         {
             Snackbar.Configuration.PositionClass = "Defaults.Classes.Position.TopStart";
-            Snackbar.Add("请输入链接", Severity.Normal);
+            Snackbar.Add("请输入链接");
         }
-
     }
+
 }

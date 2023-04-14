@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
-<MudThemeProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
 <PageTitle>ClashCs.Server</PageTitle>
 
@@ -10,7 +10,7 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle"/>
         <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
         <MudSpacer/>
-        
+
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu/>

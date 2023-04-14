@@ -1,7 +1,7 @@
 ﻿namespace ClashCs.Server.Config;
 
-public class GlobalConfig
+public static class GlobalConfig
 {
-    public Model.Config StartConfig = new Model.Config();
-    public List<Model.Config> Configs = new List<Model.Config>();
+    public static Model.Config StartConfig = new Model.Config();
+    public static List<Model.Config> Configs = new List<Model.Config>();
 }

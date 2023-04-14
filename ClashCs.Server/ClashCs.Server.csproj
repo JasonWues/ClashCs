@@ -1,21 +1,30 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    
-  </PropertyGroup>
+    <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <TypeScriptTarget>ESNext</TypeScriptTarget>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MudBlazor" Version="6.2.1" />
-    <PackageReference Include="YamlDotNet" Version="13.0.2" />
-  </ItemGroup>
+    <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <TypeScriptTarget>ESNext</TypeScriptTarget>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\css\" />
-    <Folder Include="Service\" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MudBlazor" Version="6.2.2" />
+        <PackageReference Include="YamlDotNet" Version="13.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Util\" />
+        <Folder Include="wwwroot\css\" />
+        <Folder Include="Service\" />
+    </ItemGroup>
 
 </Project>
