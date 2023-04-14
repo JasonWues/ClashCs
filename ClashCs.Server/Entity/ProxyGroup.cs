@@ -1,6 +1,6 @@
 ﻿using YamlDotNet.Serialization;
 
-namespace ClashCs.Server.Model;
+namespace ClashCs.Server.Entity;
 
 public class ProxyGroup
 {

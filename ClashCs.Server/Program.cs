@@ -1,7 +1,21 @@
 using MudBlazor.Services;
 using System.Diagnostics;
+using ClashCs.Server;
+using ClashCs.Server.Config;
+using ClashCs.Server.Entity;
+using ClashCs.Server.Interface;
+using ClashCs.Server.Service;
 
-
+if (Process.GetProcesses().ToList().Any(x => x.ProcessName.Contains("clash",StringComparison.OrdinalIgnoreCase) && x.Id != Process.GetCurrentProcess().Id))
+{
+#if DEBUG
+    
+#else
+    Console.WriteLine("Clash 已在运行");
+    Environment.Exit(1);
+#endif
+}
+await CheckClashConfigAsync();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +27,7 @@ builder.Services.AddCors(opt =>
 {
     opt.AddDefaultPolicy(policy => { policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
 });
+builder.Services.AddSingleton<IClashService, ClashService>();
 
 var app = builder.Build();
 
@@ -47,23 +62,29 @@ void StartClash()
     process.Start();
 }
 
-bool CheckClashConfig()
+async Task CheckClashConfigAsync()
 {
     if (OperatingSystem.IsLinux())
     {
         var homePath = Environment.GetEnvironmentVariable("$HOME");
         if (!string.IsNullOrEmpty(homePath))
         {
-            return File.Exists(Path.Combine(homePath, ".config", "clash", "config.yaml"));
+            var path = Path.Combine(homePath, ".config", "clash", "config.yaml");
+            var exists = File.Exists(path);
+            if (exists)
+            {
+                GlobalConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+            }
         }
     }
     else if (OperatingSystem.IsWindows())
     {
-        var exists = File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config", "clash", "config.yaml"));
+        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config", "clash",
+            "config.yaml");
+        var exists = File.Exists(path);
         if (exists)
         {
-
+            GlobalConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
         }
     }
-    return false;
 }
