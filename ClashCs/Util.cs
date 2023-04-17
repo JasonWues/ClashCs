@@ -1,11 +1,11 @@
-﻿using ClashCs.Server.Config;
+﻿using ClashCs.Config;
 using MemoryPack;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace ClashCs.Server;
+namespace ClashCs;
 
-public static class Util
+public static class Util  
 {
     public static readonly IDeserializer Deserializer = new DeserializerBuilder()
         .WithNamingConvention(UnderscoredNamingConvention.Instance)

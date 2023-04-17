@@ -1,16 +1,15 @@
+using ClashCs;
+using ClashCs.Config;
+using ClashCs.Entity;
+using ClashCs.Interface;
+using MemoryPack;
 using MudBlazor.Services;
 using System.Diagnostics;
-using ClashCs.Server;
-using ClashCs.Server.Config;
-using ClashCs.Server.Entity;
-using ClashCs.Server.Interface;
-using ClashCs.Server.Service;
-using MemoryPack;
 
-if (Process.GetProcesses().ToList().Any(x => x.ProcessName.Contains("clash",StringComparison.OrdinalIgnoreCase) && x.Id != Environment.ProcessId))
+if (Process.GetProcesses().ToList().Any(x => x.ProcessName.Contains("clash", StringComparison.OrdinalIgnoreCase) && x.Id != Environment.ProcessId))
 {
 #if DEBUG
-    
+
 #else
     Console.WriteLine("Clash 已在运行");
     Environment.Exit(1);
@@ -93,29 +92,14 @@ static async Task CheckClashConfigAsync()
 
 async Task CheckLocalConfig()
 {
-    if (OperatingSystem.IsLinux())
+
+    var exists = File.Exists(Util.LocalConfigPath);
+    if (!exists)
     {
-        var homePath = Environment.GetEnvironmentVariable("$HOME");
-        if (!string.IsNullOrEmpty(homePath))
-        {
-            var path = Path.Combine(homePath, ".config", "clash", "config.yaml");
-            var exists = File.Exists(path);
-            if (exists)
-            {
-                ProxyConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
-            }
-        }
+        LocalConfig localConfig = new LocalConfig();
+        var createStream = File.Create(Util.LocalConfigPath);
+        await MemoryPackSerializer.SerializeAsync(createStream, localConfig);
+        await createStream.DisposeAsync();
     }
-    else if (OperatingSystem.IsWindows())
-    {
-        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ClashCs","config");
-        var exists = File.Exists(path);
-        if (!exists)
-        {
-            LocalConfig localConfig = new LocalConfig();
-            var createStream = File.Create(path);
-            await MemoryPackSerializer.SerializeAsync(createStream,localConfig);
-            await createStream.DisposeAsync();
-        }
-    }
+
 }

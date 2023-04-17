@@ -1,6 +1,6 @@
 ﻿using YamlDotNet.Serialization;
 
-namespace ClashCs.Server.Entity;
+namespace ClashCs.Entity;
 
 public class Config
 {

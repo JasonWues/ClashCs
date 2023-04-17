@@ -1,4 +1,4 @@
-﻿namespace ClashCs.Server.Interface;
+﻿namespace ClashCs.Interface;
 
 public interface IClashService
 {

@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Headers;
-using ClashCs.Server.Interface;
+using ClashCs.Interface;
 
-namespace ClashCs.Server.Service;
+namespace ClashCs;
 
 public class ClashService : IClashService
 {
