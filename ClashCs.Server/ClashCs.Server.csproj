@@ -17,8 +17,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MemoryPack" Version="1.9.13" />
         <PackageReference Include="MudBlazor" Version="6.2.2" />
-        <PackageReference Include="YamlDotNet" Version="13.0.2" />
+        <PackageReference Include="YamlDotNet" Version="13.1.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -5,8 +5,9 @@ using ClashCs.Server.Config;
 using ClashCs.Server.Entity;
 using ClashCs.Server.Interface;
 using ClashCs.Server.Service;
+using MemoryPack;
 
-if (Process.GetProcesses().ToList().Any(x => x.ProcessName.Contains("clash",StringComparison.OrdinalIgnoreCase) && x.Id != Process.GetCurrentProcess().Id))
+if (Process.GetProcesses().ToList().Any(x => x.ProcessName.Contains("clash",StringComparison.OrdinalIgnoreCase) && x.Id != Environment.ProcessId))
 {
 #if DEBUG
     
@@ -15,6 +16,7 @@ if (Process.GetProcesses().ToList().Any(x => x.ProcessName.Contains("clash",Stri
     Environment.Exit(1);
 #endif
 }
+await CheckLocalConfig();
 await CheckClashConfigAsync();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,7 +64,7 @@ void StartClash()
     process.Start();
 }
 
-async Task CheckClashConfigAsync()
+static async Task CheckClashConfigAsync()
 {
     if (OperatingSystem.IsLinux())
     {
@@ -73,7 +75,7 @@ async Task CheckClashConfigAsync()
             var exists = File.Exists(path);
             if (exists)
             {
-                GlobalConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+                ProxyConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
             }
         }
     }
@@ -84,7 +86,36 @@ async Task CheckClashConfigAsync()
         var exists = File.Exists(path);
         if (exists)
         {
-            GlobalConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+            ProxyConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+        }
+    }
+}
+
+async Task CheckLocalConfig()
+{
+    if (OperatingSystem.IsLinux())
+    {
+        var homePath = Environment.GetEnvironmentVariable("$HOME");
+        if (!string.IsNullOrEmpty(homePath))
+        {
+            var path = Path.Combine(homePath, ".config", "clash", "config.yaml");
+            var exists = File.Exists(path);
+            if (exists)
+            {
+                ProxyConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+            }
+        }
+    }
+    else if (OperatingSystem.IsWindows())
+    {
+        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ClashCs","config");
+        var exists = File.Exists(path);
+        if (!exists)
+        {
+            LocalConfig localConfig = new LocalConfig();
+            var createStream = File.Create(path);
+            await MemoryPackSerializer.SerializeAsync(createStream,localConfig);
+            await createStream.DisposeAsync();
         }
     }
 }

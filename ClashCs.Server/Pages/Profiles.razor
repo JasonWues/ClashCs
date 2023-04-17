@@ -1,6 +1,8 @@
 ﻿@page "/Profiles"
 @using System.Text
+@using ClashCs.Server.Config
 @using ClashCs.Server.Entity
+@using MemoryPack
 @inject IHttpClientFactory ClientFactory
 @inject ISnackbar Snackbar
 
@@ -49,12 +51,20 @@
             var randomNum = random.Next(10000000, 19999999);
             var stringBuilder = new StringBuilder(13);
             stringBuilder.Append(randomNum).Append(".yaml");
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Config", "Profiles");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), ".config", "Profiles");
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
             
+            var localConfig = await Util.ReadConfigAsync();
+            if (localConfig != null)
+            {
+                localConfig.FileAlias = new Dictionary<int, string> { { randomNum, filename } };
+
+                await Util.WriteConfigAsync(localConfig);
+            }
+
             await File.WriteAllTextAsync(Path.Combine(path,stringBuilder.ToString()), yaml, Encoding.UTF8);
 
             _processing = false;

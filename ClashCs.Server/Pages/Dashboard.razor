@@ -4,30 +4,15 @@
 
 <MudContainer MaxWidth="MaxWidth.False">
     <MudGrid>
-        <MudItem xs="12" sm="6" md="4">
-            <MudCard>
-                <MudCardContent>
-                <MudChipSet @bind-SelectedChip="selected" Filter="true">
-                    <MudChip Text="grey">Default</MudChip>
-                </MudChipSet>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton Variant="Variant.Text" Color="Color.Primary">添加订阅</MudButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="4">
+        <MudItem xs="12" sm="12" md="6">
             <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
         </MudItem>
-        <MudItem xs="12" sm="12" md="4">
+        <MudItem xs="12" sm="12" md="6">
             <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="12" md="12">
         </MudItem>
     </MudGrid>
 </MudContainer>
 @code {
-    MudChip selected;
     
     
 }
