@@ -362,4 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 *.exe
-*.yaml
+/ClashCs/.config/Profiles/14190701.yaml
