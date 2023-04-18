@@ -5,7 +5,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace ClashCs;
 
-public static class Util  
+public static class Util
 {
     public static readonly IDeserializer Deserializer = new DeserializerBuilder()
         .WithNamingConvention(UnderscoredNamingConvention.Instance)
@@ -15,17 +15,41 @@ public static class Util
     public static string UA =
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34";
 
-    public static string LocalConfigPath = Path.Combine(Environment.CurrentDirectory,".config","config");
+    public static string LocalConfigPath = Path.Combine(Environment.CurrentDirectory, ".config", "config");
 
     public static async ValueTask<LocalConfig?> ReadConfigAsync()
     {
-        await using var readStrean = File.OpenRead(LocalConfigPath);
-        return await MemoryPackSerializer.DeserializeAsync<LocalConfig>(readStrean);
+        var readStrean = File.OpenRead(LocalConfigPath);
+        try
+        {
+            return await MemoryPackSerializer.DeserializeAsync<LocalConfig>(readStrean);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            await readStrean.DisposeAsync();
+        }
     }
 
     public static async ValueTask WriteConfigAsync(LocalConfig localConfig)
     {
-        await using var writeStream = File.OpenWrite(LocalConfigPath);
-        await MemoryPackSerializer.SerializeAsync(writeStream,localConfig);
+        var writeStream = File.OpenWrite(LocalConfigPath);
+        try
+        {
+            await MemoryPackSerializer.SerializeAsync(writeStream, localConfig);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            await writeStream.DisposeAsync();
+        }
     }
 }

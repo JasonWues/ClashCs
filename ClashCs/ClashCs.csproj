@@ -13,7 +13,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-
+        <TieredPGO>true</TieredPGO>
     </PropertyGroup>
 
     <ItemGroup>

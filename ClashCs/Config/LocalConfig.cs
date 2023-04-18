@@ -6,6 +6,6 @@ namespace ClashCs.Config;
 public partial class LocalConfig
 {
     public bool IsBoot { get; set; } = false;
-    
-    public Dictionary<int,string> FileAlias { get; set; }
+
+    public Dictionary<long, string> FileAlias { get; set; } = new Dictionary<long, string>();
 }

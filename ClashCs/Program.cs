@@ -5,8 +5,12 @@ using ClashCs.Interface;
 using MemoryPack;
 using MudBlazor.Services;
 using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 
-if (Process.GetProcesses().ToList().Any(x => x.ProcessName.Contains("clash", StringComparison.OrdinalIgnoreCase) && x.Id != Environment.ProcessId))
+if (Process.GetProcesses().ToList().Any(x =>
+        x.ProcessName.Contains("clash", StringComparison.OrdinalIgnoreCase) && x.Id != Environment.ProcessId))
 {
 #if DEBUG
 
@@ -15,6 +19,7 @@ if (Process.GetProcesses().ToList().Any(x => x.ProcessName.Contains("clash", Str
     Environment.Exit(1);
 #endif
 }
+
 await CheckLocalConfig();
 await CheckClashConfigAsync();
 
@@ -57,13 +62,14 @@ void StartClash()
 
     if (Environment.OSVersion.Platform == PlatformID.Win32NT)
     {
-        process.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, "Core", "Clash", "clash-windows-amd64-v3.exe");
+        process.StartInfo.FileName =
+            Path.Combine(Environment.CurrentDirectory, "Core", "Clash", "clash-windows-amd64-v3.exe");
     }
 
     process.Start();
 }
 
-static async Task CheckClashConfigAsync()
+async Task CheckClashConfigAsync()
 {
     if (OperatingSystem.IsLinux())
     {
@@ -74,7 +80,12 @@ static async Task CheckClashConfigAsync()
             var exists = File.Exists(path);
             if (exists)
             {
-                ProxyConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+                GlobalConfig.ProxyConfig.StartConfig =
+                    Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+            }
+            else
+            {
+                await GenerateBaseConfig(path);
             }
         }
     }
@@ -85,20 +96,56 @@ static async Task CheckClashConfigAsync()
         var exists = File.Exists(path);
         if (exists)
         {
-            ProxyConfig.StartConfig = Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+            GlobalConfig.ProxyConfig.StartConfig =
+                Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+        }
+        else
+        {
+            await GenerateBaseConfig(path);
         }
     }
 }
 
 async Task CheckLocalConfig()
 {
-
     var exists = File.Exists(Util.LocalConfigPath);
     if (!exists)
     {
-        LocalConfig localConfig = new LocalConfig();
-        await using var createStream = File.Create(Util.LocalConfigPath);
-        await MemoryPackSerializer.SerializeAsync(createStream, localConfig);
-    }
+        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        GlobalConfig.LocalConfig.FileAlias.Add(timestamp, $"{timestamp}.yaml");
 
+        await Util.WriteConfigAsync(GlobalConfig.LocalConfig);
+    }
+    else
+    {
+        GlobalConfig.LocalConfig = await Util.ReadConfigAsync();
+    }
+}
+
+async Task GenerateBaseConfig(string path)
+{
+    int port = 0;
+    Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+    try
+    {
+        IPEndPoint localEP = new IPEndPoint(IPAddress.Any, 0);
+        socket.Bind(localEP);
+        localEP = (IPEndPoint)socket.LocalEndPoint!;
+        port = localEP.Port;
+
+        var yaml = $"""
+mixed-port: 7890
+allow-lan: false
+external-controller: 127.0.0.1:{port}
+secret: ffdeb845-2700-4fd4-8b53-a252df25ce71
+""";
+        path = Path.Combine(path, "config.yaml");
+        File.Create(path);
+        await File.WriteAllTextAsync(path, yaml, Encoding.UTF8);
+        GlobalConfig.ProxyConfig.StartConfig = Util.Deserializer.Deserialize<Config>(yaml);
+    }
+    finally
+    {
+        socket.Close();
+    }
 }

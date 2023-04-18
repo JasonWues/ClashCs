@@ -47,25 +47,24 @@
             var yaml = await response.Content.ReadAsStringAsync();
 
             var profileInfo = Util.Deserializer.Deserialize<Config>(yaml);
-            var random = new Random();
-            var randomNum = random.Next(10000000, 19999999);
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var stringBuilder = new StringBuilder(13);
-            stringBuilder.Append(randomNum).Append(".yaml");
+            stringBuilder.Append(timestamp).Append(".yaml");
             var path = Path.Combine(Directory.GetCurrentDirectory(), ".config", "Profiles");
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
-            
+
             var localConfig = await Util.ReadConfigAsync();
             if (localConfig != null)
             {
-                localConfig.FileAlias = new Dictionary<int, string> { { randomNum, filename } };
+                localConfig.FileAlias = new Dictionary<long, string> { { timestamp, filename } };
 
                 await Util.WriteConfigAsync(localConfig);
             }
 
-            await File.WriteAllTextAsync(Path.Combine(path,stringBuilder.ToString()), yaml, Encoding.UTF8);
+            await File.WriteAllTextAsync(Path.Combine(path, stringBuilder.ToString()), yaml, Encoding.UTF8);
 
             _processing = false;
         }

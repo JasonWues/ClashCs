@@ -363,4 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 *.exe
 /ClashCs/.config/*.yaml
+/ClashCs/.config/config
 ClashCs/.config/dotnet-tools.json
