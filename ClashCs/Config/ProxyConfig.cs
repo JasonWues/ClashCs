@@ -2,6 +2,6 @@
 
 public class ProxyConfig
 {
-    public Entity.Config StartConfig = new Entity.Config();
-    public List<Entity.Config> Configs = new List<Entity.Config>();
+    public Entity.Config BaseConfig { get; set; } = new Entity.Config();
+    public List<Entity.Config> Configs { get; set; } = new List<Entity.Config>();
 }

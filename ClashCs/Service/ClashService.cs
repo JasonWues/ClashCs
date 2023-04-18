@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using ClashCs.Config;
 using ClashCs.Interface;
 
 namespace ClashCs;
@@ -12,15 +13,16 @@ public class ClashService : IClashService
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<string> Logs(string level)
+    public async Task<string> LogsAsync(string level)
     {
         var client = _httpClientFactory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer");
+        client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer ", GlobalConfig.ProxyConfig.BaseConfig.Secret);
         return await Task.FromResult("sss");
     }
 
-    public async Task<List<Entity.Config>> Config()
+    public List<Entity.Config> Config()
     {
-        return null;
+        return new List<Entity.Config>();
     }
 }

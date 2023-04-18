@@ -2,7 +2,6 @@ using ClashCs;
 using ClashCs.Config;
 using ClashCs.Entity;
 using ClashCs.Interface;
-using MemoryPack;
 using MudBlazor.Services;
 using System.Diagnostics;
 using System.Net;
@@ -22,6 +21,7 @@ if (Process.GetProcesses().ToList().Any(x =>
 
 await CheckLocalConfig();
 await CheckClashConfigAsync();
+CheckProxyConfig();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,7 +80,7 @@ async Task CheckClashConfigAsync()
             var exists = File.Exists(path);
             if (exists)
             {
-                GlobalConfig.ProxyConfig.StartConfig =
+                GlobalConfig.ProxyConfig.BaseConfig =
                     Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
             }
             else
@@ -96,7 +96,7 @@ async Task CheckClashConfigAsync()
         var exists = File.Exists(path);
         if (exists)
         {
-            GlobalConfig.ProxyConfig.StartConfig =
+            GlobalConfig.ProxyConfig.BaseConfig =
                 Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
         }
         else
@@ -122,6 +122,20 @@ async Task CheckLocalConfig()
     }
 }
 
+void CheckProxyConfig()
+{
+    DirectoryInfo root = new DirectoryInfo(Util.ProfilesConfigPath);
+    var files = root.GetFiles("*.yaml");
+    if (files.Any())
+    {
+        foreach (var fileInfo in files)
+        {
+            using var reader = fileInfo.OpenText();
+            GlobalConfig.ProxyConfig.Configs.Add(Util.Deserializer.Deserialize<Config>(reader));
+        }
+    }
+}
+
 async Task GenerateBaseConfig(string path)
 {
     int port = 0;
@@ -142,7 +156,7 @@ secret: ffdeb845-2700-4fd4-8b53-a252df25ce71
         path = Path.Combine(path, "config.yaml");
         File.Create(path);
         await File.WriteAllTextAsync(path, yaml, Encoding.UTF8);
-        GlobalConfig.ProxyConfig.StartConfig = Util.Deserializer.Deserialize<Config>(yaml);
+        GlobalConfig.ProxyConfig.BaseConfig = Util.Deserializer.Deserialize<Config>(yaml);
     }
     finally
     {

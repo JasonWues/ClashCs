@@ -2,7 +2,7 @@
 
 public interface IClashService
 {
-    Task<string> Logs(string level);
+    Task<string> LogsAsync(string level);
 
-    Task<List<Entity.Config>> Config();
+    List<Entity.Config> Config();
 }

@@ -64,6 +64,8 @@
                 await Util.WriteConfigAsync(localConfig);
             }
 
+            GlobalConfig.ProxyConfig.Configs.Add(profileInfo);
+
             await File.WriteAllTextAsync(Path.Combine(path, stringBuilder.ToString()), yaml, Encoding.UTF8);
 
             _processing = false;

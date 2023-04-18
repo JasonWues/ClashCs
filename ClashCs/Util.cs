@@ -17,6 +17,8 @@ public static class Util
 
     public static string LocalConfigPath = Path.Combine(Environment.CurrentDirectory, ".config", "config");
 
+    public static string ProfilesConfigPath = Path.Combine(Environment.CurrentDirectory, ".config", "Profiles");
+
     public static async ValueTask<LocalConfig?> ReadConfigAsync()
     {
         var readStrean = File.OpenRead(LocalConfigPath);
