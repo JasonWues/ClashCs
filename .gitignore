@@ -362,4 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 *.exe
-/ClashCs/.config/
+/ClashCs/.config/*.yaml
+ClashCs/.config/dotnet-tools.json
