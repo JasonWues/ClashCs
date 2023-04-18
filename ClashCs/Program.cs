@@ -97,9 +97,8 @@ async Task CheckLocalConfig()
     if (!exists)
     {
         LocalConfig localConfig = new LocalConfig();
-        var createStream = File.Create(Util.LocalConfigPath);
+        await using var createStream = File.Create(Util.LocalConfigPath);
         await MemoryPackSerializer.SerializeAsync(createStream, localConfig);
-        await createStream.DisposeAsync();
     }
 
 }
