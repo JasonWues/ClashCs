@@ -23,6 +23,6 @@ public class ClashService : IClashService
 
     public List<Entity.Config> Config()
     {
-        return new List<Entity.Config>();
+        return GlobalConfig.ProxyConfig.Configs;
     }
 }

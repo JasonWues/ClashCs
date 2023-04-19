@@ -2,7 +2,6 @@
 @using System.Text
 @using ClashCs.Config
 @using ClashCs.Entity
-@using MemoryPack
 @inject IHttpClientFactory ClientFactory
 @inject ISnackbar Snackbar
 
@@ -44,9 +43,13 @@
             var response = await client.GetAsync(uri);
             response.EnsureSuccessStatusCode();
             var filename = response.Content.Headers.ContentDisposition.FileName;
+            var subInfoExists = response.Headers.TryGetValues("Subscription-Userinfo", out var subInfo);
+            var updateIntervalExists = response.Headers.TryGetValues("Profile-Update-Interval", out var updateInterval);
+            var urlExists = response.Headers.TryGetValues("profile-web-page-url", out var url);
+
             var yaml = await response.Content.ReadAsStringAsync();
 
-            var profileInfo = Util.Deserializer.Deserialize<Config>(yaml);
+            var profileInfo = Util.Deserializer<Config>(yaml);
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var stringBuilder = new StringBuilder(13);
             stringBuilder.Append(timestamp).Append(".yaml");
@@ -59,7 +62,16 @@
             var localConfig = await Util.ReadConfigAsync();
             if (localConfig != null)
             {
-                localConfig.FileAlias = new Dictionary<long, string> { { timestamp, filename } };
+                var localProxyConfig = new LocalProxyConfig
+                {
+                    FileName = stringBuilder.ToString(),
+                    SubscriptionName = filename,
+                    SubInfo = subInfoExists ? Util.Deserializer<SubInfo>(subInfo.ToList()?[0]) : null,
+                    Url = SubscriptionLink,
+                    HomeLink = urlExists ? url?.ToList()?[0] : null,
+                };
+                localProxyConfig.SetUpdateInterval(updateIntervalExists ? updateInterval.ToList()?[0] : "24");
+                localConfig.LocalProxyConfigs.Add(localProxyConfig);
 
                 await Util.WriteConfigAsync(localConfig);
             }
@@ -69,6 +81,9 @@
             await File.WriteAllTextAsync(Path.Combine(path, stringBuilder.ToString()), yaml, Encoding.UTF8);
 
             _processing = false;
+
+            Snackbar.Configuration.PositionClass = "Defaults.Classes.Position.TopStart";
+            Snackbar.Add("下载完成");
         }
         else
         {

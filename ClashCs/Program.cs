@@ -81,7 +81,7 @@ async Task CheckClashConfigAsync()
             if (exists)
             {
                 GlobalConfig.ProxyConfig.BaseConfig =
-                    Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+                    Util.Deserializer<Config>(await File.ReadAllTextAsync(path));
             }
             else
             {
@@ -97,7 +97,7 @@ async Task CheckClashConfigAsync()
         if (exists)
         {
             GlobalConfig.ProxyConfig.BaseConfig =
-                Util.Deserializer.Deserialize<Config>(await File.ReadAllTextAsync(path));
+                Util.Deserializer<Config>(await File.ReadAllTextAsync(path));
         }
         else
         {
@@ -112,7 +112,7 @@ async Task CheckLocalConfig()
     if (!exists)
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        GlobalConfig.LocalConfig.FileAlias.Add(timestamp, $"{timestamp}.yaml");
+        //GlobalConfig.LocalConfig.FileAlias.Add(timestamp, $"{timestamp}.yaml");
 
         await Util.WriteConfigAsync(GlobalConfig.LocalConfig);
     }
@@ -131,7 +131,7 @@ void CheckProxyConfig()
         foreach (var fileInfo in files)
         {
             using var reader = fileInfo.OpenText();
-            GlobalConfig.ProxyConfig.Configs.Add(Util.Deserializer.Deserialize<Config>(reader));
+            GlobalConfig.ProxyConfig.Configs.Add(Util.Deserializer<Config>(reader));
         }
     }
 }
@@ -156,7 +156,7 @@ secret: ffdeb845-2700-4fd4-8b53-a252df25ce71
         path = Path.Combine(path, "config.yaml");
         File.Create(path);
         await File.WriteAllTextAsync(path, yaml, Encoding.UTF8);
-        GlobalConfig.ProxyConfig.BaseConfig = Util.Deserializer.Deserialize<Config>(yaml);
+        GlobalConfig.ProxyConfig.BaseConfig = Util.Deserializer<Config>(yaml);
     }
     finally
     {
