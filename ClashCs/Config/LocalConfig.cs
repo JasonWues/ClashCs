@@ -7,11 +7,14 @@ namespace ClashCs.Config;
 public partial class LocalConfig
 {
     public bool IsBoot { get; set; } = false;
+    
+    public bool IsOpenProxy { get; set; } = false;
 
     public List<LocalProxyConfig> LocalProxyConfigs { get; set; }
 }
 
-public class LocalProxyConfig
+[MemoryPackable]
+public partial class LocalProxyConfig
 {
     public string FileName { get; set; }
 
@@ -20,8 +23,7 @@ public class LocalProxyConfig
     public string Url { get; set; }
 
     public string? HomeLink { get; set; }
-
-
+    
     public Dictionary<string, string> Selected { get; set; }
 
     public SubInfo? SubInfo { get; set; }
@@ -34,7 +36,8 @@ public class LocalProxyConfig
     }
 }
 
-public class SubInfo
+[MemoryPackable]
+public partial class SubInfo
 {
     [YamlMember(Alias = "upload", ApplyNamingConventions = false)]
     public int Upload { get; set; }

@@ -112,7 +112,19 @@ async Task CheckLocalConfig()
     if (!exists)
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        //GlobalConfig.LocalConfig.FileAlias.Add(timestamp, $"{timestamp}.yaml");
+
+        GlobalConfig.LocalConfig.LocalProxyConfigs = new List<LocalProxyConfig>(1)
+        {
+            new LocalProxyConfig()
+            {
+                FileName = $"{timestamp}.yaml",
+                SubscriptionName = "default",
+                Url = null,
+                HomeLink = null,
+                Selected = null,
+                SubInfo = null
+            }
+        };
 
         await Util.WriteConfigAsync(GlobalConfig.LocalConfig);
     }

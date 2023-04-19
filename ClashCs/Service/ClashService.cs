@@ -21,8 +21,8 @@ public class ClashService : IClashService
         return await Task.FromResult("sss");
     }
 
-    public List<Entity.Config> Config()
+    public List<LocalProxyConfig> LocalProxyConfigs()
     {
-        return GlobalConfig.ProxyConfig.Configs;
+        return GlobalConfig.LocalConfig.LocalProxyConfigs;
     }
 }

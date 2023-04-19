@@ -1,36 +1,26 @@
 ﻿@page "/Dashboard"
 @using ClashCs.Interface
-@using ClashCs.Entity
+@using ClashCs.Config
 @inject IClashService ClashService
 
 <MudContainer MaxWidth="MaxWidth.False">
     <MudGrid>
-        <MudItem xs="12" sm="12" md="6">
-            @foreach (var config in GetConfig())
-            {
-                <MudCard>
-                    <MudCardContent>
-                        <MudText>Story of the day</MudText>
-                        <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-                    </MudCardActions>
-                </MudCard>
-            }
-        </MudItem>
-        <MudItem xs="12" sm="12" md="6">
+        <MudItem xs="12" sm="12" md="4">
             <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
         </MudItem>
+        <MudItem xs="12" sm="12" md="4">
+            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="12" md="4">
+            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12">
+            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+        </MudItem>        
     </MudGrid>
 </MudContainer>
 
 @code {
-
-    List<Config> GetConfig()
-    {
-        return ClashService.Config();
-    }
-
-
+    
+    
 }
