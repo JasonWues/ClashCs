@@ -73,7 +73,7 @@ async Task CheckClashConfigAsync()
 {
     if (OperatingSystem.IsLinux())
     {
-        var homePath = Environment.GetEnvironmentVariable("$HOME");
+        var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         if (!string.IsNullOrEmpty(homePath))
         {
             var path = Path.Combine(homePath, ".config", "clash", "config.yaml");
