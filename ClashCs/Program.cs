@@ -71,8 +71,6 @@ void StartClash()
 
 async Task CheckClashConfigAsync()
 {
-    if (OperatingSystem.IsLinux())
-    {
         var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         if (!string.IsNullOrEmpty(homePath))
         {
@@ -88,22 +86,7 @@ async Task CheckClashConfigAsync()
                 await GenerateBaseConfig(path);
             }
         }
-    }
-    else if (OperatingSystem.IsWindows())
-    {
-        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config", "clash",
-            "config.yaml");
-        var exists = File.Exists(path);
-        if (exists)
-        {
-            GlobalConfig.ProxyConfig.BaseConfig =
-                Util.Deserializer<Config>(await File.ReadAllTextAsync(path));
-        }
-        else
-        {
-            await GenerateBaseConfig(path);
-        }
-    }
+    
 }
 
 async Task CheckLocalConfig()
@@ -151,7 +134,7 @@ void CheckProxyConfig()
 async Task GenerateBaseConfig(string path)
 {
     int port = 0;
-    Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+    Socket socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     try
     {
         IPEndPoint localEP = new IPEndPoint(IPAddress.Any, 0);
@@ -169,9 +152,54 @@ secret: ffdeb845-2700-4fd4-8b53-a252df25ce71
         File.Create(path);
         await File.WriteAllTextAsync(path, yaml, Encoding.UTF8);
         GlobalConfig.ProxyConfig.BaseConfig = Util.Deserializer<Config>(yaml);
+
+        await CreateClashService();
+
     }
     finally
     {
         socket.Close();
+    }
+}
+
+async Task CreateClashService()
+{
+    //Create Clash Service
+    if (OperatingSystem.IsLinux())
+    {
+
+        Process process = new()
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = "bash",
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            }
+        };
+        process.Start();
+
+        //TODO Muti Core Support
+        await process.StandardInput.WriteLineAsync("which clash");
+        var clashPath = await process.StandardOutput.ReadLineAsync();
+
+        var clashService = $"""
+                [Unit]
+                Description=Clash daemon, A rule-based proxy in Go.
+                After=network.target
+
+                [Service]
+                Type=simple
+                Restart=always
+                ExecStart={(string.IsNullOrEmpty(clashPath) ? Util.CorePath : clashPath)} -d {Util.ClashConfig}
+
+                [Install]
+                WantedBy=multi-user.target
+                """;
+
+        var clashServicePath = Path.Combine("etc", "systemd", "system", "clash.service");
+        await File.WriteAllTextAsync(clashServicePath, clashService, Encoding.UTF8);
     }
 }

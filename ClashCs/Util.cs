@@ -34,6 +34,11 @@ public static class Util
 
     public static readonly string ProfilesConfigPath = Path.Combine(Environment.CurrentDirectory, ".config", "Profiles");
 
+    public static readonly string CorePath = Path.Combine(Environment.CurrentDirectory, "Core");
+
+    public static string ClashConfig { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+
+
     public static async ValueTask<LocalConfig?> ReadConfigAsync()
     {
         var readStrean = File.OpenRead(LocalConfigPath);
