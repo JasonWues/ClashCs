@@ -1,9 +1,10 @@
 ﻿@page "/Setting"
 <MudContainer MaxWidth="MaxWidth.Medium">
+    <MudSwitch T="bool" @bind-Checked="_autoStart" Label="开机启动"></MudSwitch>
 </MudContainer>
 
 @code {
-    bool _autoStart;
+    bool _autoStart = false;
 
     private void AutoStartCheckChanged(bool autoStart)
     {

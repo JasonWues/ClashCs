@@ -119,6 +119,10 @@ async Task CheckLocalConfig()
 
 void CheckProxyConfig()
 {
+    if(!File.Exists(Util.ProfilesConfigPath)){
+        Directory.CreateDirectory(Util.ProfilesConfigPath);
+        return;
+    }
     DirectoryInfo root = new DirectoryInfo(Util.ProfilesConfigPath);
     var files = root.GetFiles("*.yaml");
     if (files.Any())
@@ -170,7 +174,7 @@ async Task CreateClashService()
 
         Process process = new()
         {
-            StartInfo = new ProcessStartInfo
+            StartInfo = new()
             {
                 FileName = "bash",
                 RedirectStandardInput = true,
@@ -181,19 +185,20 @@ async Task CreateClashService()
         };
         process.Start();
 
-        //TODO Muti Core Support
-        await process.StandardInput.WriteLineAsync("which clash");
+        var config = await Util.ReadConfigAsync();
+
+        await process.StandardInput.WriteLineAsync($"which {Util.ClashEnumToString(config.clashEnum)}");
         var clashPath = await process.StandardOutput.ReadLineAsync();
 
         var clashService = $"""
                 [Unit]
                 Description=Clash daemon, A rule-based proxy in Go.
-                After=network.target
+                After=netwrk.target
 
                 [Service]
                 Type=simple
                 Restart=always
-                ExecStart={(string.IsNullOrEmpty(clashPath) ? Util.CorePath : clashPath)} -d {Util.ClashConfig}
+                ExecStart={(clashPath.Contains("not found") ? Util.CorePath : clashPath)} -d {Util.ClashConfig}
 
                 [Install]
                 WantedBy=multi-user.target

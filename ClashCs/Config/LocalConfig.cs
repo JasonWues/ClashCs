@@ -1,5 +1,6 @@
 ﻿using MemoryPack;
 using YamlDotNet.Serialization;
+using ClashCs.Entity;
 
 namespace ClashCs.Config;
 
@@ -9,6 +10,8 @@ public partial class LocalConfig
     public bool IsBoot { get; set; } = false;
     
     public bool IsOpenProxy { get; set; } = false;
+
+    public ClashEnum clashEnum {get;set;} = ClashEnum.Clash;
 
     public List<LocalProxyConfig> LocalProxyConfigs { get; set; }
 }

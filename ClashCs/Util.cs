@@ -2,6 +2,7 @@
 using MemoryPack;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+using ClashCs.Entity;
 
 namespace ClashCs;
 
@@ -38,6 +39,14 @@ public static class Util
 
     public static string ClashConfig { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
 
+    public static string ClashEnumToString(ClashEnum clashEnum){
+        return clashEnum switch{
+            ClashEnum.Clash => "clash",
+            ClashEnum.Clash_Premium => "clash-premium-bin",
+            ClashEnum.Clash_Meta => "clash-meta",
+            _ => ""
+        };
+    }
 
     public static async ValueTask<LocalConfig?> ReadConfigAsync()
     {
