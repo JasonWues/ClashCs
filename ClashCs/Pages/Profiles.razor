@@ -2,8 +2,10 @@
 @using System.Text
 @using ClashCs.Config
 @using ClashCs.Entity
+@using ClashCs.Interface
 @inject IHttpClientFactory ClientFactory
 @inject ISnackbar Snackbar
+@inject IClashService ClashService
 
 <PageTitle>Profiles</PageTitle>
 
@@ -23,6 +25,20 @@
             }
         </MudButton>
         <MudButton Class="flex-grow-1" Variant="Variant.Filled" Style="height: 52px">Update All</MudButton>
+
+        @foreach (var config in Configs())
+        {
+            
+            <MudCard>
+                <MudCardContent>
+                    <MudText>@config.SubscriptionName</MudText>
+                    <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+                </MudCardActions>
+            </MudCard>  
+        }
     </div>
 
 
@@ -31,6 +47,11 @@
 @code {
     public string? SubscriptionLink { get; set; }
     private bool _processing;
+
+    private List<LocalProxyConfig> Configs()
+    {
+        return ClashService.LocalProxyConfigs();
+    }
 
     protected async Task GetClashConfigAsync()
     {

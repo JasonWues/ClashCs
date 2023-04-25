@@ -13,9 +13,12 @@ if (Process.GetProcesses().ToList().Any(x =>
 {
 #if DEBUG
 
-#else
     Console.WriteLine("Clash 已在运行");
-    Environment.Exit(1);
+    Console.WriteLine("是否关闭? [Y/N]");
+    
+#else
+
+
 #endif
 }
 
@@ -189,6 +192,10 @@ async Task CreateClashService()
 
         await process.StandardInput.WriteLineAsync($"which {Util.ClashEnumToString(config.clashEnum)}");
         var clashPath = await process.StandardOutput.ReadLineAsync();
+
+        if(clashPath.Contains("not found")){
+            //TODO Online Get Core?
+        }
 
         var clashService = $"""
                 [Unit]
