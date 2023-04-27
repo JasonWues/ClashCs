@@ -8,6 +8,15 @@
 
     private void AutoStartCheckChanged(bool autoStart)
     {
-        
+        if (OperatingSystem.IsWindows())
+        {
+            string StartupPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup);
+            string CurrentDir = Environment.CurrentDirectory;
+            string exeDir = Path.Combine(CurrentDir, @"\ClashCs.exe.lnk");
+            File.Copy(exeDir, StartupPath + @"\ClashCs.exe.lnk", true);
+        }else if(OperatingSystem.IsLinux()){
+            
+        }
+
     }
 }
