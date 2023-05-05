@@ -13,11 +13,11 @@ if (Process.GetProcesses().ToList().Any(x =>
 {
 #if DEBUG
 
-    Console.WriteLine("Clash 已在运行");
-    Environment.Exit(1);
 
 #else
-
+    
+    Console.WriteLine("Clash 已在运行");
+    Environment.Exit(1);
 
 #endif
 }

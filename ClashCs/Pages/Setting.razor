@@ -1,10 +1,10 @@
 ﻿@page "/Setting"
 <MudContainer MaxWidth="MaxWidth.Medium">
-    <MudSwitch T="bool" @bind-Checked="_autoStart" Label="开机启动"></MudSwitch>
+    <MudSwitch T="bool" CheckedChanged="AutoStartCheckChanged" Label="开机启动"></MudSwitch>
 </MudContainer>
 
 @code {
-    bool _autoStart = false;
+    bool _autoStart { get; set; } = false;
 
     private void AutoStartCheckChanged(bool autoStart)
     {
@@ -12,8 +12,7 @@
         {
             string StartupPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup);
             string CurrentDir = Environment.CurrentDirectory;
-            string exeDir = Path.Combine(CurrentDir, @"\ClashCs.exe.lnk");
-            File.Copy(exeDir, StartupPath + @"\ClashCs.exe.lnk", true);
+            string exeDir = Path.Combine(CurrentDir, "ClashCs.exe.lnk");
         }else if(OperatingSystem.IsLinux()){
             
         }
