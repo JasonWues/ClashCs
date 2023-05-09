@@ -71,7 +71,7 @@ void StartClash()
     if (Environment.OSVersion.Platform == PlatformID.Win32NT)
     {
         process.StartInfo.FileName =
-            Path.Combine(Environment.CurrentDirectory, "Core", "Clash", "clash-windows-amd64-v3.exe");
+            Path.Join(Environment.CurrentDirectory, "Core", "Clash", "clash-windows-amd64-v3.exe");
     }
 
     process.Start();
@@ -82,7 +82,7 @@ async Task CheckClashConfigAsync()
     var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
     if (!string.IsNullOrEmpty(homePath))
     {
-        var path = Path.Combine(homePath, ".config", "clash", "config.yaml");
+        var path = Path.Join(homePath, ".config", "clash", "config.yaml");
         var exists = File.Exists(path);
         if (exists)
         {
@@ -133,7 +133,7 @@ external-controller: 127.0.0.1:{port}
 secret: ffdeb845-2700-4fd4-8b53-a252df25ce71
 """;
 
-            var path = Path.Combine(Util.ProfilesConfigPath, $"{timestamp}.yaml");
+            var path = Path.Join(Util.ProfilesConfigPath, $"{timestamp}.yaml");
             Directory.CreateDirectory(Util.ProfilesConfigPath);
             using var sw = File.CreateText(path);
             await sw.WriteAsync(yaml);
@@ -158,7 +158,7 @@ secret: ffdeb845-2700-4fd4-8b53-a252df25ce71
 
 void CheckProxyConfig()
 {
-    if (!File.Exists(Util.ProfilesConfigPath))
+    if (!Directory.Exists(Util.ProfilesConfigPath))
     {
         Directory.CreateDirectory(Util.ProfilesConfigPath);
         return;
@@ -177,8 +177,8 @@ void CheckProxyConfig()
 
 async Task GenerateBaseConfig(string path)
 {
-    File.Copy(Path.Combine(Util.ProfilesConfigPath, GlobalConfig.LocalConfig.LocalProxyConfigs[0].FileName), Path.Combine(path, "config.yaml"));
-    var yaml = await File.ReadAllTextAsync(Path.Combine(path, "config.yaml"));
+    File.Copy(Path.Join(Util.ProfilesConfigPath, GlobalConfig.LocalConfig.LocalProxyConfigs[0].FileName), Path.Join(path, "config.yaml"));
+    var yaml = await File.ReadAllTextAsync(Path.Join(path, "config.yaml"));
     GlobalConfig.ProxyConfig.BaseConfig = Util.Deserializer<Config>(yaml);
 
     await CreateClashService();
@@ -228,7 +228,7 @@ async Task CreateClashService()
                 WantedBy=multi-user.target
                 """;
 
-        var clashServicePath = Path.Combine("etc", "systemd", "system", "clash.service");
+        var clashServicePath = Path.Join("etc", "systemd", "system", "clash.service");
         await File.WriteAllTextAsync(clashServicePath, clashService, Encoding.UTF8);
     }
 }

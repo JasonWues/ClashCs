@@ -31,11 +31,11 @@ public static class Util
     public static readonly string UA =
         "ClashCs";
 
-    public static readonly string LocalConfigPath = Path.Combine(Environment.CurrentDirectory, ".config", "config");
+    public static readonly string LocalConfigPath = Path.Join(Environment.CurrentDirectory, ".config", "config");
 
-    public static readonly string ProfilesConfigPath = Path.Combine(Environment.CurrentDirectory, ".config", "Profiles");
+    public static readonly string ProfilesConfigPath = Path.Join(Environment.CurrentDirectory, ".config", "Profiles");
 
-    public static readonly string CorePath = Path.Combine(Environment.CurrentDirectory, "Core");
+    public static readonly string CorePath = Path.Join(Environment.CurrentDirectory, "Core");
 
     public static string ClashConfig { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
 

@@ -12,7 +12,7 @@
         {
             string StartupPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup);
             string CurrentDir = Environment.CurrentDirectory;
-            string exeDir = Path.Combine(CurrentDir, "ClashCs.exe.lnk");
+            string exeDir = Path.Join(CurrentDir, "ClashCs.exe.lnk");
         }else if(OperatingSystem.IsLinux()){
             
         }
