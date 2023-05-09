@@ -25,22 +25,19 @@
             }
         </MudButton>
         <MudButton Class="flex-grow-1" Variant="Variant.Filled" Style="height: 52px">Update All</MudButton>
-
-        @foreach (var config in Configs())
-        {
-            
-            <MudCard>
-                <MudCardContent>
-                    <MudText>@config.SubscriptionName</MudText>
-                    <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-                </MudCardActions>
-            </MudCard>  
-        }
     </div>
 
+    @foreach (var config in Configs())
+    {
+        <MudCard>
+            <MudCardContent>
+                <MudText>@config.SubscriptionName</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => EditConfigAsync(config.FileName)">Edit</MudButton>
+            </MudCardActions>
+        </MudCard>
+    }
 
 </MudContainer>
 
@@ -113,4 +110,12 @@
         }
     }
 
+    protected async Task EditConfigAsync(string filename)
+    {
+        var path = Path.Combine(Util.ProfilesConfigPath,filename);
+
+        var yaml = await File.ReadAllTextAsync(path);
+
+        
+    }
 }

@@ -15,9 +15,6 @@ public class ClashService : IClashService
 
     public async Task<string> LogsAsync(string level)
     {
-        var client = _httpClientFactory.CreateClient();
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer ", GlobalConfig.ProxyConfig.BaseConfig.Secret);
         return await Task.FromResult("sss");
     }
 

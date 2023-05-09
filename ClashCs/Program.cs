@@ -2,9 +2,11 @@ using ClashCs;
 using ClashCs.Config;
 using ClashCs.Entity;
 using ClashCs.Interface;
+using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text;
 
@@ -30,7 +32,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient(Options.DefaultName, config =>
+{
+    config.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer ", GlobalConfig.ProxyConfig.BaseConfig.Secret);
+});
 builder.Services.AddMudServices();
 builder.Services.AddCors(opt =>
 {
@@ -74,22 +79,22 @@ void StartClash()
 
 async Task CheckClashConfigAsync()
 {
-        var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        if (!string.IsNullOrEmpty(homePath))
+    var homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+    if (!string.IsNullOrEmpty(homePath))
+    {
+        var path = Path.Combine(homePath, ".config", "clash", "config.yaml");
+        var exists = File.Exists(path);
+        if (exists)
         {
-            var path = Path.Combine(homePath, ".config", "clash", "config.yaml");
-            var exists = File.Exists(path);
-            if (exists)
-            {
-                GlobalConfig.ProxyConfig.BaseConfig =
-                    Util.Deserializer<Config>(await File.ReadAllTextAsync(path));
-            }
-            else
-            {
-                await GenerateBaseConfig(path);
-            }
+            GlobalConfig.ProxyConfig.BaseConfig =
+                Util.Deserializer<Config>(await File.ReadAllTextAsync(path));
         }
-    
+        else
+        {
+            await GenerateBaseConfig(path);
+        }
+    }
+
 }
 
 async Task CheckLocalConfig()
@@ -98,6 +103,7 @@ async Task CheckLocalConfig()
     if (!exists)
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        int port = 0;
 
         GlobalConfig.LocalConfig.LocalProxyConfigs = new List<LocalProxyConfig>(1)
         {
@@ -112,6 +118,36 @@ async Task CheckLocalConfig()
             }
         };
 
+        Socket socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        try
+        {
+            IPEndPoint localEP = new IPEndPoint(IPAddress.Any, 0);
+            socket.Bind(localEP);
+            localEP = (IPEndPoint)socket.LocalEndPoint!;
+            port = localEP.Port;
+
+            var yaml = $"""
+mixed-port: 7890
+allow-lan: false
+external-controller: 127.0.0.1:{port}
+secret: ffdeb845-2700-4fd4-8b53-a252df25ce71
+""";
+
+            var path = Path.Combine(Util.ProfilesConfigPath, $"{timestamp}.yaml");
+            Directory.CreateDirectory(Util.ProfilesConfigPath);
+            using var sw = File.CreateText(path);
+            await sw.WriteAsync(yaml);
+            GlobalConfig.ProxyConfig.Configs.Add(Util.Deserializer<Config>(yaml));
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+        finally
+        {
+            socket.Close();
+        }
+
         await Util.WriteConfigAsync(GlobalConfig.LocalConfig);
     }
     else
@@ -122,13 +158,14 @@ async Task CheckLocalConfig()
 
 void CheckProxyConfig()
 {
-    if(!File.Exists(Util.ProfilesConfigPath)){
+    if (!File.Exists(Util.ProfilesConfigPath))
+    {
         Directory.CreateDirectory(Util.ProfilesConfigPath);
         return;
     }
     DirectoryInfo root = new DirectoryInfo(Util.ProfilesConfigPath);
     var files = root.GetFiles("*.yaml");
-    if (files.Any())
+    if (files.Length != 0)
     {
         foreach (var fileInfo in files)
         {
@@ -140,33 +177,12 @@ void CheckProxyConfig()
 
 async Task GenerateBaseConfig(string path)
 {
-    int port = 0;
-    Socket socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-    try
-    {
-        IPEndPoint localEP = new IPEndPoint(IPAddress.Any, 0);
-        socket.Bind(localEP);
-        localEP = (IPEndPoint)socket.LocalEndPoint!;
-        port = localEP.Port;
+    File.Copy(Path.Combine(Util.ProfilesConfigPath, GlobalConfig.LocalConfig.LocalProxyConfigs[0].FileName), Path.Combine(path, "config.yaml"));
+    var yaml = await File.ReadAllTextAsync(Path.Combine(path, "config.yaml"));
+    GlobalConfig.ProxyConfig.BaseConfig = Util.Deserializer<Config>(yaml);
 
-        var yaml = $"""
-mixed-port: 7890
-allow-lan: false
-external-controller: 127.0.0.1:{port}
-secret: ffdeb845-2700-4fd4-8b53-a252df25ce71
-""";
-        path = Path.Combine(path, "config.yaml");
-        File.Create(path);
-        await File.WriteAllTextAsync(path, yaml, Encoding.UTF8);
-        GlobalConfig.ProxyConfig.BaseConfig = Util.Deserializer<Config>(yaml);
+    await CreateClashService();
 
-        await CreateClashService();
-
-    }
-    finally
-    {
-        socket.Close();
-    }
 }
 
 async Task CreateClashService()
@@ -193,7 +209,8 @@ async Task CreateClashService()
         await process.StandardInput.WriteLineAsync($"which {Util.ClashEnumToString(config.clashEnum)}");
         var clashPath = await process.StandardOutput.ReadLineAsync();
 
-        if(clashPath.Contains("not found")){
+        if (clashPath.Contains("not found"))
+        {
             //TODO Online Get Core?
         }
 
