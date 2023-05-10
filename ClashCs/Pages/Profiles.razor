@@ -3,6 +3,7 @@
 @using ClashCs.Config
 @using ClashCs.Entity
 @using ClashCs.Interface
+@using ClashCs.Interop;
 @inject IHttpClientFactory ClientFactory
 @inject ISnackbar Snackbar
 @inject IClashService ClashService
@@ -34,7 +35,7 @@
                 <MudText>@config.SubscriptionName</MudText>
             </MudCardContent>
             <MudCardActions>
-                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => EditConfigAsync(config.FileName)">Edit</MudButton>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => EditConfig(config.FileName)">Edit</MudButton>
             </MudCardActions>
         </MudCard>
     }
@@ -48,6 +49,25 @@
     private List<LocalProxyConfig> Configs()
     {
         return ClashService.LocalProxyConfigs();
+    }
+
+    public async Task RequestConfigFile(string SubscriptionLink)
+    {
+        if (!string.IsNullOrEmpty(SubscriptionLink))
+        {
+            var client = ClientFactory.CreateClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(Util.UA);
+            var uri = new Uri(SubscriptionLink.Replace('\t', ' ').Trim());
+            var response = await client.GetAsync(uri);
+            response.EnsureSuccessStatusCode();
+            var filename = response.Content.Headers.ContentDisposition.FileName;
+            var subInfoExists = response.Headers.TryGetValues("Subscription-Userinfo", out var subInfo);
+            var updateIntervalExists = response.Headers.TryGetValues("Profile-Update-Interval", out var updateInterval);
+            var urlExists = response.Headers.TryGetValues("profile-web-page-url", out var url);
+
+            var yaml = await response.Content.ReadAsStringAsync();
+
+        }
     }
 
     protected async Task GetClashConfigAsync()
@@ -110,6 +130,55 @@
         }
     }
 
+    protected void EditConfig(string filename)
+    {
+        try
+        {
+            var path = Path.Join(Util.ProfilesConfigPath, filename);
+
+            if (OperatingSystem.IsWindows())
+            {
+                var result = Win32Interop.ShellExecute(IntPtr.Zero, "open", path, null, null, 1);
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+    protected void ShowInFolder(string filename)
+    {
+        try
+        {
+            var path = Path.Join(Util.ProfilesConfigPath, filename);
+
+            if (OperatingSystem.IsWindows())
+            {
+                var result = Win32Interop.ShellExecute(IntPtr.Zero, "explore", path, null, null, 1);
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+
+    protected async Task Update(string filename)
+    {
+        var localConfig = await Util.ReadConfigAsync();
+        var config = localConfig.LocalProxyConfigs.FirstOrDefault(x => x.FileName == filename);
+
+    }
+
+    protected void GenerateQRCode()
+    {
+
+    }
+
     protected async Task DeleteConfig(string filename)
     {
         var path = Path.Join(Util.ProfilesConfigPath, filename);
@@ -119,19 +188,7 @@
         var currentConfig = GlobalConfig.LocalConfig.LocalProxyConfigs.FirstOrDefault(x => x.FileName == filename);
         GlobalConfig.LocalConfig.LocalProxyConfigs.Remove(currentConfig);
         await Util.WriteConfigAsync(GlobalConfig.LocalConfig);
-    }
-
-    protected void GenerateQRCode()
-    {
-        
-    }
-
-    protected async Task EditConfigAsync(string filename)
-    {
-        var path = Path.Join(Util.ProfilesConfigPath,filename);
-
-        var yaml = await File.ReadAllTextAsync(path);
-         
-        
+        Snackbar.Configuration.PositionClass = "Defaults.Classes.Position.TopStart";
+        Snackbar.Add("删除成功");
     }
 }
