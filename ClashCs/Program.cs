@@ -2,11 +2,9 @@ using ClashCs;
 using ClashCs.Config;
 using ClashCs.Entity;
 using ClashCs.Interface;
-using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 using System.Diagnostics;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text;
 
@@ -32,10 +30,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddHttpClient(Options.DefaultName, config =>
-{
-    config.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer ", GlobalConfig.ProxyConfig.BaseConfig.Secret);
-});
+builder.Services.AddHttpClient();
 builder.Services.AddMudServices();
 builder.Services.AddCors(opt =>
 {
@@ -139,7 +134,7 @@ secret: ffdeb845-2700-4fd4-8b53-a252df25ce71
             await sw.WriteAsync(yaml);
             GlobalConfig.ProxyConfig.Configs.Add(Util.Deserializer<Config>(yaml));
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
         }
@@ -213,7 +208,7 @@ async Task CreateClashService()
         {
             //TODO Online Get Core?
         }
-        
+
 
         var clashService = $"""
                 [Unit]

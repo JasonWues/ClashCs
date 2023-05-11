@@ -35,6 +35,7 @@
                 <MudText>@config.SubscriptionName</MudText>
             </MudCardContent>
             <MudCardActions>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => OpenWebPage(config.HomeLink)">OpenHome</MudButton>
                 <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => EditConfig(config.FileName)">Edit</MudButton>
             </MudCardActions>
         </MudCard>
@@ -51,26 +52,26 @@
         return ClashService.LocalProxyConfigs();
     }
 
-    public async Task RequestConfigFile(string SubscriptionLink)
+    private void OpenWebPage(string homeLink)
     {
-        if (!string.IsNullOrEmpty(SubscriptionLink))
+        try
         {
-            var client = ClientFactory.CreateClient();
-            client.DefaultRequestHeaders.UserAgent.ParseAdd(Util.UA);
-            var uri = new Uri(SubscriptionLink.Replace('\t', ' ').Trim());
-            var response = await client.GetAsync(uri);
-            response.EnsureSuccessStatusCode();
-            var filename = response.Content.Headers.ContentDisposition.FileName;
-            var subInfoExists = response.Headers.TryGetValues("Subscription-Userinfo", out var subInfo);
-            var updateIntervalExists = response.Headers.TryGetValues("Profile-Update-Interval", out var updateInterval);
-            var urlExists = response.Headers.TryGetValues("profile-web-page-url", out var url);
+            if (!string.IsNullOrEmpty(homeLink))
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    var result = Win32Interop.ShellExecute(IntPtr.Zero, "open", homeLink, null, null, 1);
+                }
+            }
 
-            var yaml = await response.Content.ReadAsStringAsync();
+        }
+        catch (Exception ex)
+        {
 
         }
     }
 
-    protected async Task GetClashConfigAsync()
+    private async Task GetClashConfigAsync()
     {
         if (!string.IsNullOrEmpty(SubscriptionLink))
         {
@@ -91,7 +92,7 @@
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var stringBuilder = new StringBuilder(13);
             stringBuilder.Append(timestamp).Append(".yaml");
-            var path = Path.Join(Directory.GetCurrentDirectory(), ".config", "Profiles");
+            var path = Util.ProfilesConfigPath;
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -130,7 +131,7 @@
         }
     }
 
-    protected void EditConfig(string filename)
+    private void EditConfig(string filename)
     {
         try
         {
@@ -148,7 +149,7 @@
         }
     }
 
-    protected void ShowInFolder(string filename)
+    private void ShowInFolder(string filename)
     {
         try
         {
@@ -167,19 +168,19 @@
     }
 
 
-    protected async Task Update(string filename)
+    private async Task Update(string filename)
     {
         var localConfig = await Util.ReadConfigAsync();
         var config = localConfig.LocalProxyConfigs.FirstOrDefault(x => x.FileName == filename);
 
     }
 
-    protected void GenerateQRCode()
+    private void GenerateQRCode()
     {
-
+        
     }
 
-    protected async Task DeleteConfig(string filename)
+    private async Task DeleteConfig(string filename)
     {
         var path = Path.Join(Util.ProfilesConfigPath, filename);
 
