@@ -101,11 +101,12 @@
             var localConfig = await Util.ReadConfigAsync();
             if (localConfig != null)
             {
+                var standardSubInfo = subInfoExists ? Util.ProcessSubInfo(subInfo?.ToList()?[0]) : string.Empty;
                 var localProxyConfig = new LocalProxyConfig
                 {
                     FileName = stringBuilder.ToString(),
                     SubscriptionName = filename,
-                    SubInfo = subInfoExists ? Util.Deserializer<SubInfo>(subInfo.ToList()?[0]) : null,
+                    SubInfo = !string.IsNullOrEmpty(standardSubInfo) ? Util.Deserializer<SubInfo>(standardSubInfo) : new SubInfo(),
                     Url = SubscriptionLink,
                     HomeLink = urlExists ? url?.ToList()?[0] : null,
                 };

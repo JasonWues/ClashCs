@@ -1,8 +1,8 @@
 ﻿using ClashCs.Config;
+using ClashCs.Entity;
 using MemoryPack;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
-using ClashCs.Entity;
 
 namespace ClashCs;
 
@@ -31,16 +31,41 @@ public static class Util
     public static readonly string UA =
         "ClashCs";
 
-    public static readonly string LocalConfigPath = Path.Join(Environment.CurrentDirectory, ".config", "config");
+    public static string ProcessSubInfo(string? subInfo)
+    {
+        if (string.IsNullOrEmpty(subInfo))
+        {
+            return string.Empty;
+        }
+        var subinfoList = subInfo.Split(';', StringSplitOptions.TrimEntries);
+        if (subinfoList.Length == 4)
+        {
+            var standardSubInfo = $"""
+                {subinfoList[0].Replace("=", ": ")}
+                {subinfoList[1].Replace("=", ": ")}
+                {subinfoList[2].Replace("=", ": ")}
+                {subinfoList[3].Replace("=", ": ")}
+                """;
+            return standardSubInfo;
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
 
-    public static readonly string ProfilesConfigPath = Path.Join(Environment.CurrentDirectory, ".config", "Profiles");
+    public static string LocalConfigPath { get => Path.Join(Environment.CurrentDirectory, ".config", "config"); }
 
-    public static readonly string CorePath = Path.Join(Environment.CurrentDirectory, "Core");
+    public static string ProfilesConfigPath { get => Path.Join(Environment.CurrentDirectory, ".config", "Profiles"); }
+
+    public static string CorePath { get => Path.Join(Environment.CurrentDirectory, "Core"); }
 
     public static string ClashConfig { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
 
-    public static string ClashEnumToString(ClashEnum clashEnum){
-        return clashEnum switch{
+    public static string ClashEnumToString(ClashEnum clashEnum)
+    {
+        return clashEnum switch
+        {
             ClashEnum.Clash => "clash",
             ClashEnum.Clash_Premium => "clash-premium-bin",
             ClashEnum.Clash_Meta => "clash-meta",
