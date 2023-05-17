@@ -1,13 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <TypeScriptTarget>ESNext</TypeScriptTarget>
-    </PropertyGroup>
-
-    <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <TypeScriptTarget>ESNext</TypeScriptTarget>
-    </PropertyGroup>
-
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
@@ -19,7 +11,11 @@
 
     <ItemGroup>
         <PackageReference Include="MemoryPack" Version="1.9.13" />
-        <PackageReference Include="MudBlazor" Version="6.2.3" />
+        <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.1.0-beta">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="MudBlazor" Version="6.2.4" />
         <PackageReference Include="YamlDotNet" Version="13.1.0" />
     </ItemGroup>
 

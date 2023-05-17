@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /ClashCs/.config/*.yaml
 /ClashCs/.config/config
 ClashCs/.config/dotnet-tools.json
+.idea/.idea.ClashCs/.idea

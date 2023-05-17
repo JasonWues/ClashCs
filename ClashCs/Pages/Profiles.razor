@@ -7,6 +7,7 @@
 @inject IHttpClientFactory ClientFactory
 @inject ISnackbar Snackbar
 @inject IClashService ClashService
+@inject IJSRuntime JsRuntime
 
 <PageTitle>Profiles</PageTitle>
 
@@ -37,6 +38,7 @@
             <MudCardActions>
                 <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => OpenWebPage(config.HomeLink)">OpenHome</MudButton>
                 <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => EditConfig(config.FileName)">Edit</MudButton>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="GenerateQRCode">QRCode</MudButton>
             </MudCardActions>
         </MudCard>
     }
@@ -98,7 +100,7 @@
                 Directory.CreateDirectory(path);
             }
 
-            var localConfig = await Util.ReadConfigAsync();
+            var localConfig = GlobalConfig.LocalConfig;
             if (localConfig != null)
             {
                 var standardSubInfo = subInfoExists ? Util.ProcessSubInfo(subInfo?.ToList()?[0]) : string.Empty;
@@ -169,16 +171,27 @@
     }
 
 
-    private async Task Update(string filename)
+    private async Task Update(string subscriptionLink,string fileName)
     {
-        var localConfig = await Util.ReadConfigAsync();
-        var config = localConfig.LocalProxyConfigs.FirstOrDefault(x => x.FileName == filename);
+        var client = ClientFactory.CreateClient();
+        client.DefaultRequestHeaders.UserAgent.ParseAdd(Util.UA);
+        var uri = new Uri(SubscriptionLink.Replace('\t', ' ').Trim());
+        var response = await client.GetAsync(uri);
+        response.EnsureSuccessStatusCode();
 
+        var yaml = await response.Content.ReadAsStringAsync();
+
+        var profileInfo = Util.Deserializer<Config>(yaml);
+
+        using var localFile = File.CreateText(Path.Join(Util.ProfilesConfigPath, fileName));
+
+        await localFile.WriteAsync(yaml);
     }
 
-    private void GenerateQRCode()
+    private async Task GenerateQRCode()
     {
-        
+        var z = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./ClashBase.js");
+        await z.InvokeVoidAsync("getPromptInstance");
     }
 
     private async Task DeleteConfig(string filename)

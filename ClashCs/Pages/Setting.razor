@@ -1,12 +1,12 @@
 ﻿@page "/Setting"
 <MudContainer MaxWidth="MaxWidth.Medium">
-    <MudSwitch T="bool" CheckedChanged="AutoStartCheckChanged" Label="开机启动"></MudSwitch>
+    <MudSwitch T="bool" CheckedChanged="x => AutoStartCheckChanged(x)" Label="开机启动"></MudSwitch>
 </MudContainer>
 
 @code {
     bool _autoStart { get; set; } = false;
 
-    private void AutoStartCheckChanged(bool autoStart)
+    private void AutoStartCheckChanged(bool? autoStart)
     {
         if (OperatingSystem.IsWindows())
         {
