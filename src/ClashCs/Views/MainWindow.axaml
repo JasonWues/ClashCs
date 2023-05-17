@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ClashCs.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ClashCs.Views.MainWindow"
+		xmlns:fa="using:FluentAvalonia.UI.Controls"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="ClashCs">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<fa:NavigationView>
+		<fa:NavigationView.MenuItems>
+			<fa:NavigationViewItem IconSource="Play" Content="Home" Tag="Home" />
+			<fa:NavigationViewItem IconSource="Save" Content="Proxies" Tag="Proxies" />
+			<fa:NavigationViewItem IconSource="Refresh" Content="Profiles" Tag="Profiles" />
+			<fa:NavigationViewItem IconSource="Download" Content="Log" Tag="Log" />
+		</fa:NavigationView.MenuItems>
+		<fa:Frame x:Name="contentFrame"></fa:Frame>
+	</fa:NavigationView>
+</Window>
