@@ -4,5 +4,6 @@ namespace ClashCs.ViewModels
 {
     public class ViewModelBase : ObservableObject
     {
+        
     }
 }
