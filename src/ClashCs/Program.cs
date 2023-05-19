@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 using Avalonia.Logging;
-using ClashCs.Util;
+using ClashCs.Tool;
 
 namespace ClashCs
 {

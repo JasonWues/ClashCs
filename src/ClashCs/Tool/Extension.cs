@@ -2,14 +2,15 @@
 using System.Diagnostics;
 using System.Linq;
 using Avalonia;
+using ClashCs.CoreFoundation;
 
-namespace ClashCs.Util;
+namespace ClashCs.Tool;
 
 public static class Extension
 {
     public static AppBuilder InitConfig(this AppBuilder builder)
     {
-        
+        ConfigManager.LoadConfig();
         return builder;
     }
     

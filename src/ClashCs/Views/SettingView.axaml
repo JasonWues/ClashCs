@@ -6,14 +6,25 @@
              x:Class="ClashCs.Views.SettingView"
              xmlns:fa="using:FluentAvalonia.UI.Controls">
     
-    <fa:SettingsExpander Header="Metatron" Description="CADSADAD">
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Settings Editor" VerticalAlignment="Center"/>
-            <fa:FAComboBox>
-                <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
-                <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
-                <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
-            </fa:FAComboBox>
-        </StackPanel>
-    </fa:SettingsExpander>
+    <ScrollViewer>
+        <fa:SettingsExpander Header="BaseConfig">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Settings Editor" VerticalAlignment="Center"/>
+                <fa:FAComboBox VerticalAlignment="Top">
+                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
+                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
+                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
+                </fa:FAComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Settings Editor" VerticalAlignment="Center"/>
+                <fa:FAComboBox>
+                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
+                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
+                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
+                </fa:FAComboBox>
+            </StackPanel>
+        </fa:SettingsExpander>
+    </ScrollViewer>
+
 </UserControl>
