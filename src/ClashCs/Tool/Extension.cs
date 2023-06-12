@@ -3,11 +3,17 @@ using System.Diagnostics;
 using System.Linq;
 using Avalonia;
 using ClashCs.CoreFoundation;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ClashCs.Tool;
 
 public static class Extension
 {
+    public static T GetService<T>(this Application application) where T : class
+    {
+        return (application as App).Services.GetService<T>();
+    }
+    
     public static AppBuilder InitConfig(this AppBuilder builder)
     {
         ConfigManager.LoadConfig();

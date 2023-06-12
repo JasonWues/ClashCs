@@ -16,14 +16,6 @@
                     <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
                 </fa:FAComboBox>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Settings Editor" VerticalAlignment="Center"/>
-                <fa:FAComboBox>
-                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
-                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
-                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
-                </fa:FAComboBox>
-            </StackPanel>
         </fa:SettingsExpander>
     </ScrollViewer>
 

@@ -22,6 +22,9 @@ namespace ClashCs.Views
                     case "Home":
                         FrameView.Navigate(typeof(HomeView));
                         break;
+                    case "Profiles":
+                        FrameView.Navigate(typeof(ProfilesView));
+                        break;
                     case "设置":
                         FrameView.Navigate(typeof(SettingView));
                         break;

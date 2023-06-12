@@ -9,7 +9,7 @@ namespace ClashCs.Tool;
 public class Util
 {
     
-    public readonly string Ua = "ClashCs";
+    public readonly static string UA = "ClashCs";
 
     public async ValueTask SaveConfigAsync(LocalConfig localConfig)
     {

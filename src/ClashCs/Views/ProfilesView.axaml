@@ -1,0 +1,21 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:ClashCs.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ClashCs.Views.ProfilesView"
+             x:DataType="viewModels:ProfilesViewModel">
+    
+    <UserControl.DataContext>
+        <viewModels:ProfilesViewModel/>
+    </UserControl.DataContext>
+    
+    <Grid RowDefinitions="Auto,9*">
+        <StackPanel Grid.Row="0" Spacing="3" Orientation="Horizontal">
+            <TextBox Text="{Binding ProfilesLink}" Width="300"/>
+            <Button Content="Download" Command="{Binding DownloadCommand}"/>
+            <Button Content="Update All" Command="{Binding UpdateAllCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
