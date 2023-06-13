@@ -8,15 +8,14 @@ namespace ClashCs.Tool;
 
 public class Util
 {
-    
-    public readonly static string UA = "ClashCs";
+    public readonly static Lazy<Util> Instance = new(() => new Util());
 
     public async ValueTask SaveConfigAsync(LocalConfig localConfig)
     {
         try
         {
             await using var writeStream = File.OpenWrite(Global.LocalConfigPath);
-            await MemoryPackSerializer.SerializeAsync(writeStream,localConfig);
+            await MemoryPackSerializer.SerializeAsync(writeStream, localConfig);
         }
         catch (Exception e)
         {
@@ -24,7 +23,20 @@ public class Util
             throw;
         }
     }
-    
+
+    public void SaveConfig(LocalConfig localConfig)
+    {
+        try
+        {
+            MemoryPackSerializer.Serialize(localConfig);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     public async ValueTask<LocalConfig?> ReadConfigAsync()
     {
         try

@@ -6,16 +6,16 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ClashCs.Views.ProfilesView"
              x:DataType="viewModels:ProfilesViewModel">
-    
+
     <UserControl.DataContext>
-        <viewModels:ProfilesViewModel/>
+        <viewModels:ProfilesViewModel />
     </UserControl.DataContext>
-    
+
     <Grid RowDefinitions="Auto,9*">
         <StackPanel Grid.Row="0" Spacing="3" Orientation="Horizontal">
-            <TextBox Text="{Binding ProfilesLink}" Width="300"/>
-            <Button Content="Download" Command="{Binding DownloadCommand}"/>
-            <Button Content="Update All" Command="{Binding UpdateAllCommand}"/>
+            <TextBox Text="{Binding ProfilesLink}" Width="300" />
+            <Button Content="Download" Command="{Binding DownloadCommand}" />
+            <Button Content="Update All" Command="{Binding UpdateAllCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

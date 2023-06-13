@@ -1,33 +1,30 @@
-﻿using Avalonia;
-using System;
-using Avalonia.Logging;
-using ClashCs.Tool;
+﻿using System;
+using Avalonia;
 
-namespace ClashCs
+namespace ClashCs;
+
+internal class Program
 {
-    internal class Program
+    [STAThread]
+    public static void Main(string[] args)
     {
-        [STAThread]
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                BuildAvaloniaApp()
-                    .StartWithClassicDesktopLifetime(args);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
         }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 
-        public static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>() 
-                .UsePlatformDetect()
-                .WithInterFont()
-                .LogToTrace()
-                .InitConfig()
-                .InitClashConfig();
+    public static AppBuilder BuildAvaloniaApp()
+    {
+        return AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .WithInterFont()
+            .LogToTrace();
     }
 }
