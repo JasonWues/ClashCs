@@ -18,8 +18,8 @@ public partial class MainWindow : Window
         {
             switch (item.Tag)
             {
-                case "Home":
-                    FrameView.Navigate(typeof(HomeView));
+                case "Dashboard":
+                    FrameView.Navigate(typeof(DashboardView));
                     break;
                 case "Profiles":
                     FrameView.Navigate(typeof(ProfilesView));

@@ -12,7 +12,7 @@
                        SelectionChanged="MainNav_OnSelectionChanged"
                        Loaded="MainNav_OnLoaded">
         <fa:NavigationView.MenuItems>
-            <fa:NavigationViewItem IconSource="Play" Content="Home" Tag="Home" />
+            <fa:NavigationViewItem IconSource="Play" Content="Home" Tag="Dashboard" />
             <fa:NavigationViewItem IconSource="Save" Content="Proxies" Tag="Proxies" />
             <fa:NavigationViewItem IconSource="Refresh" Content="Profiles" Tag="Profiles" />
             <fa:NavigationViewItem IconSource="Download" Content="Log" Tag="Log" />

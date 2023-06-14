@@ -6,10 +6,12 @@ public class LazyConfig
 {
     public readonly static Lazy<LazyConfig> Instance = new(() => new LazyConfig());
 
-    public LocalConfig Config { get; private set; }
+    private LocalConfig Config { get; set; }
 
     public void SetConfig(LocalConfig config)
     {
         Config = config;
     }
+
+    public LocalConfig GetConfig() => Config;
 }

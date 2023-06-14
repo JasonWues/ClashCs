@@ -11,7 +11,6 @@ namespace ClashCs.ViewModels;
 
 public partial class ProfilesViewModel : ObservableObject
 {
-
     [ObservableProperty]
     private string profilesLink;
 
@@ -34,13 +33,16 @@ public partial class ProfilesViewModel : ObservableObject
                 var urlExists = response.Headers.TryGetValues("profile-web-page-url", out var url);
 
                 var yaml = await response.Content.ReadAsStringAsync();
-
+                
                 //var profileInfo = Util.Deserializer<Config>(yaml);
                 var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
                 var stringBuilder = new StringBuilder(13);
                 stringBuilder.Append(timestamp).Append(".yaml");
 
-
+            }
+            else
+            {
+                
             }
         }
         catch (Exception e)

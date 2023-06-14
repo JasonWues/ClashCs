@@ -3,9 +3,9 @@ using Avalonia.Markup.Xaml;
 
 namespace ClashCs.Views;
 
-public partial class HomeView : UserControl
+public partial class DashboardView : UserControl
 {
-    public HomeView()
+    public DashboardView()
     {
         InitializeComponent();
     }

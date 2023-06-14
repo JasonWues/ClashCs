@@ -12,6 +12,8 @@ public partial class LocalConfig
     public int HttpPort { get; set; } = 7890;
 
     public int SocksPort { get; set; } = 7891;
+    
+    public int ApiPort { get; set; } = 9090;
 
     public bool EnableIpv6 { get; set; }
 

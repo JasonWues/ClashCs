@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
@@ -25,6 +26,10 @@ public class App : Application
         {
             BindingPlugins.DataValidators.RemoveAt(0);
             desktop.MainWindow = new MainWindow();
+
+            var notifyIcon = new TrayIcon();
+            notifyIcon.Menu ??= new NativeMenu();
+            notifyIcon.ToolTipText = "ClashCs";
         }
 
         base.OnFrameworkInitializationCompleted();
