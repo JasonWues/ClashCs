@@ -26,10 +26,7 @@ public class App : Application
         {
             BindingPlugins.DataValidators.RemoveAt(0);
             desktop.MainWindow = new MainWindow();
-
-            var notifyIcon = new TrayIcon();
-            notifyIcon.Menu ??= new NativeMenu();
-            notifyIcon.ToolTipText = "ClashCs";
+            ConfigTray();
         }
 
         base.OnFrameworkInitializationCompleted();
@@ -46,7 +43,13 @@ public class App : Application
     {
         var services = new ServiceCollection();
         services.AddHttpClient();
-
         return services.BuildServiceProvider();
+    }
+
+    public void ConfigTray()
+    {
+        var notifyIcon = new TrayIcon();
+        notifyIcon.Menu ??= new NativeMenu();
+        notifyIcon.ToolTipText = "ClashCs";
     }
 }
