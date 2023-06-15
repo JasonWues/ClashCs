@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using Avalonia;
 using ClashCs.Config;
 using MemoryPack;
 using YamlDotNet.Serialization;
@@ -20,6 +22,29 @@ public class Util
             .IgnoreUnmatchedProperties()
             .Build();
     }
+
+    public bool IsAdministrator()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            try
+            {
+                WindowsIdentity current = WindowsIdentity.GetCurrent();
+                WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
+                return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+        }
+        else
+        {
+            return true;
+        }
+    }
     
     private IDeserializer DeserializerInstead { get; set; }
     
@@ -27,6 +52,7 @@ public class Util
     {
         try
         {
+            
             if (!string.IsNullOrEmpty(input))
             {
                 return DeserializerInstead.Deserialize<T>(input);
@@ -40,6 +66,7 @@ public class Util
             throw;
         }
     }
+    
     
     public async ValueTask SaveConfigAsync(LocalConfig localConfig)
     {
