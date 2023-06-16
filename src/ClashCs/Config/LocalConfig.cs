@@ -1,4 +1,6 @@
-﻿using MemoryPack;
+﻿using System.Collections.Generic;
+using ClashCs.Model;
+using MemoryPack;
 
 namespace ClashCs.Config;
 
@@ -20,4 +22,7 @@ public partial class LocalConfig
     public bool AllowLanConn { get; set; }
 
     public bool EnableTun { get; set; }
+
+    public List<ProfileItem> ProfileItems { get; set; } = new List<ProfileItem>();
+    
 }

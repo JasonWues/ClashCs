@@ -9,19 +9,17 @@ public static class ConfigManager
     public static void LoadConfig()
     {
         var util = Util.Instance.Value;
-        var lazyConfig = LazyConfig.Instance.Value;
+        var localConfig = App.Current.GetService<LocalConfig>();
         var exists = Directory.Exists(Global.LocalConfigDicPath);
         if (!exists)
         {
             Directory.CreateDirectory(Global.LocalConfigDicPath);
             File.Create(Global.LocalConfigPath).Dispose();
-            var localConfig = new LocalConfig();
             util.SaveConfig(localConfig);
-            lazyConfig.SetConfig(localConfig);
         }
         else
         {
-            lazyConfig.SetConfig(util.ReadConfigAsync().GetAwaiter().GetResult());
+            localConfig = util.ReadConfigAsync().GetAwaiter().GetResult();
         }
 
 

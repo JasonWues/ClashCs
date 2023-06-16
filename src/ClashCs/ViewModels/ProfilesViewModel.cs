@@ -34,11 +34,9 @@ public partial class ProfilesViewModel : ObservableObject
 
                 var yaml = await response.Content.ReadAsStringAsync();
                 
-                //var profileInfo = Util.Deserializer<Config>(yaml);
                 var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
                 var stringBuilder = new StringBuilder(13);
                 stringBuilder.Append(timestamp).Append(".yaml");
-
             }
             else
             {

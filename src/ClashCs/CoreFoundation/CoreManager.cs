@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Text;
 using ClashCs.Config;
 using ClashCs.Tool;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace ClashCs.CoreFoundation;
 
