@@ -20,10 +20,5 @@ public partial class SettingViewModel : ObservableObject
             throw;
         }
     }
-
-    public void SetAutoRun()
-    {
-        
-    }
     
 }

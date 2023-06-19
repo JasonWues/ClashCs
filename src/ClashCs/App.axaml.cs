@@ -13,15 +13,19 @@ namespace ClashCs;
 
 public class App : Application
 {
-    public IServiceProvider Services { get; private set; }
+    public IServiceProvider Services { get; private set; } = null!;
 
-    public override void Initialize()
+    public override void Initialize() 
     {
         AvaloniaXamlLoader.Load(this);
     }
 
-    public override void OnFrameworkInitializationCompleted()
+    public override async void OnFrameworkInitializationCompleted()
     {
+        if (OperatingSystem.IsMacOS() && !OperatingSystem.IsMacOSVersionAtLeast(10,13))
+        {
+            Environment.Exit(0);
+        }
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -31,7 +35,7 @@ public class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
-        ConfigManager.LoadConfig();
+        await ConfigManager.LoadConfig();
     }
 
     public override void RegisterServices()

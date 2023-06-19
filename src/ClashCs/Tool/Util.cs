@@ -2,7 +2,6 @@
 using System.IO;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Avalonia;
 using ClashCs.Config;
 using MemoryPack;
 using YamlDotNet.Serialization;
@@ -16,7 +15,11 @@ public class Util
 
     public Util()
     {
-
+        var context = new ClashYamlContext();
+        DeserializerInstead = new StaticDeserializerBuilder(context)
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .IgnoreUnmatchedProperties()
+            .Build();
     }
 
     public bool IsAdministrator()
@@ -26,7 +29,7 @@ public class Util
             try
             {
                 WindowsIdentity current = WindowsIdentity.GetCurrent();
-                WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
+                WindowsPrincipal windowsPrincipal = new(current);
                 return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
             }
             catch (Exception e)
@@ -78,11 +81,11 @@ public class Util
         }
     }
 
-    public void SaveConfig(LocalConfig localConfig)
+    public byte[] SaveConfig(LocalConfig localConfig)
     {
         try
         {
-            MemoryPackSerializer.Serialize(localConfig);
+            return MemoryPackSerializer.Serialize(localConfig);
         }
         catch (Exception e)
         {
@@ -104,4 +107,5 @@ public class Util
             throw;
         }
     }
+    
 }

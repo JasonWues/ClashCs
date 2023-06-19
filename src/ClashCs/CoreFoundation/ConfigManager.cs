@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
+using Avalonia;
 using ClashCs.Config;
 using ClashCs.Tool;
 
@@ -6,20 +8,23 @@ namespace ClashCs.CoreFoundation;
 
 public static class ConfigManager
 {
-    public static void LoadConfig()
+    public static async Task LoadConfig()
     {
         var util = Util.Instance.Value;
-        var localConfig = App.Current.GetService<LocalConfig>();
-        var exists = Directory.Exists(Global.LocalConfigDicPath);
+        var localConfig = Application.Current.GetService<LocalConfig>();
+        var exists = File.Exists(Global.LocalConfigPath);
         if (!exists)
         {
-            Directory.CreateDirectory(Global.LocalConfigDicPath);
+            if (!Directory.Exists(Global.LocalConfigDicPath))
+            {
+                Directory.CreateDirectory(Global.LocalConfigDicPath);
+            }
             File.Create(Global.LocalConfigPath).Dispose();
-            util.SaveConfig(localConfig);
+            await util.SaveConfigAsync(localConfig);
         }
         else
         {
-            localConfig = util.ReadConfigAsync().GetAwaiter().GetResult();
+            localConfig = await util.ReadConfigAsync();
         }
 
 

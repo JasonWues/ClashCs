@@ -5,8 +5,8 @@ namespace ClashCs.Tool;
 
 public static class Extension
 {
-    public static T GetService<T>(this Application application) where T : class
+    public static T GetService<T>(this Application? application) where T : class
     {
-        return (application as App).Services.GetService<T>();
+        return (application as App)!.Services.GetService<T>()!;
     }
 }
