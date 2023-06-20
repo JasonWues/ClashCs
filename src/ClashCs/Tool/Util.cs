@@ -107,5 +107,19 @@ public class Util
             throw;
         }
     }
+
+    public LocalConfig ReadConfig()
+    {
+        try
+        {
+            var bytes = File.ReadAllBytes(Global.LocalConfigPath);
+            return MemoryPackSerializer.Deserialize<LocalConfig>(bytes);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
     
 }

@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Threading;
 using ClashCs.Config;
 using ClashCs.Model;
 using ClashCs.Tool;
@@ -19,8 +23,12 @@ public partial class ProfilesViewModel : ObservableObject
     
     public ProfilesViewModel()
     {
-        localConfig = Application.Current.GetService<LocalConfig>();
+        localConfig = LazyConfig.Instance.Value.LocalConfig;
+        ProfileItems.AddRange(localConfig.ProfileItems);
     }
+    
+    [ObservableProperty]
+    private ObservableCollection<ProfileItem> profileItems = new ObservableCollection<ProfileItem>();
     
     [ObservableProperty]
     private string profilesLink;
@@ -41,7 +49,7 @@ public partial class ProfilesViewModel : ObservableObject
                 var filename = response.Content.Headers.ContentDisposition?.FileName;
                 var subInfoExists = response.Headers.TryGetValues("Subscription-Userinfo", out var subInfo);
                 var updateIntervalExists = response.Headers.TryGetValues("Profile-Update-Interval", out var updateInterval);
-                var urlExists = response.Headers.TryGetValues("profile-web-page-url", out var url);
+                var homeUrlExists = response.Headers.TryGetValues("profile-web-page-url", out var homeUrl);
 
                 var yaml = await response.Content.ReadAsStringAsync();
                 
@@ -52,18 +60,38 @@ public partial class ProfilesViewModel : ObservableObject
                 {
                     Directory.CreateDirectory(Global.ProfilesDicPath);
                 }
+
+                var subInfoDic = subInfo != null && subInfo.Any() ? subInfo.FirstOrDefault().Split(';')
+                    .ToDictionary(x => x.Split('=')?[0]?.Trim(), x => x.Split('=')?[1]) : new Dictionary<string, string>();
+                
                 var address = Path.Join(Global.ProfilesDicPath, stringBuilder.ToString());
                 
+                
+                var downloadExists = subInfoDic.TryGetValue("download", out var download);
+                var totalExists = subInfoDic.TryGetValue("total", out var total);
+                var expireExists = subInfoDic.TryGetValue("expire", out var expire);
+                
+
                 await File.WriteAllTextAsync(address, yaml, Encoding.UTF8);
 
                 ProfileItem profileItem = new ProfileItem
                 {
                     Url = ProfilesLink,
+                    HomeUrl = homeUrlExists ? homeUrl.FirstOrDefault() : null,
                     Address = address,
-                    IndexId = new Guid()
+                    FileName = filename,
+                    IndexId = Guid.NewGuid(),
+                    Expire = expireExists ? DateTimeOffset.FromUnixTimeSeconds(long.Parse(expire)) : DateTimeOffset.MinValue,
+                    Download = downloadExists ? $"{ulong.Parse(download) / 1024 / 1024 / 1024}G" : "0",
+                    Total = totalExists ? $"{ulong.Parse(total) / 1024 / 1024 / 1024}G" : "0"
                 };
                 
                 localConfig.ProfileItems.Add(profileItem);
+
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    ProfileItems.Add(profileItem);
+                });
 
                 await Util.Instance.Value.SaveConfigAsync(localConfig);
             }

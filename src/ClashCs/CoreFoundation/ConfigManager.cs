@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Avalonia;
 using ClashCs.Config;
@@ -11,7 +12,7 @@ public static class ConfigManager
     public static async Task LoadConfig()
     {
         var util = Util.Instance.Value;
-        var localConfig = Application.Current.GetService<LocalConfig>();
+        var localConfig = LazyConfig.Instance.Value.LocalConfig;
         var exists = File.Exists(Global.LocalConfigPath);
         if (!exists)
         {
@@ -19,12 +20,12 @@ public static class ConfigManager
             {
                 Directory.CreateDirectory(Global.LocalConfigDicPath);
             }
-            File.Create(Global.LocalConfigPath).Dispose();
+            
             await util.SaveConfigAsync(localConfig);
         }
         else
         {
-            localConfig = await util.ReadConfigAsync();
+            LazyConfig.Instance.Value.SetLocalConfig(await util.ReadConfigAsync());
         }
 
 

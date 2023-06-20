@@ -8,6 +8,7 @@ using ClashCs.Config;
 using ClashCs.CoreFoundation;
 using ClashCs.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace ClashCs;
 
@@ -48,7 +49,6 @@ public class App : Application
     {
         var services = new ServiceCollection();
         services.AddHttpClient();
-        services.AddSingleton<LocalConfig>();
         return services.BuildServiceProvider();
     }
 
