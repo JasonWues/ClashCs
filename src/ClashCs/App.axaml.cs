@@ -32,6 +32,8 @@ public class App : Application
         {
             BindingPlugins.DataValidators.RemoveAt(0);
             desktop.MainWindow = new MainWindow();
+            desktop.MainWindow.MinWidth = 1024;
+            desktop.MainWindow.MinHeight = 576;
             ConfigTray();
         }
 
@@ -52,7 +54,7 @@ public class App : Application
         return services.BuildServiceProvider();
     }
 
-    public void ConfigTray()
+    private void ConfigTray()
     {
         var notifyIcon = new TrayIcon();
         notifyIcon.Menu ??= new NativeMenu();

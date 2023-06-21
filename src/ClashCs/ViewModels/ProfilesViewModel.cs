@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using ClashCs.Config;
 using ClashCs.Model;
@@ -29,6 +30,9 @@ public partial class ProfilesViewModel : ObservableObject
     
     [ObservableProperty]
     private ObservableCollection<ProfileItem> profileItems = new ObservableCollection<ProfileItem>();
+
+    [ObservableProperty]
+    private int selectProfileItemIndex;
     
     [ObservableProperty]
     private string profilesLink;
@@ -71,7 +75,6 @@ public partial class ProfilesViewModel : ObservableObject
                 var totalExists = subInfoDic.TryGetValue("total", out var total);
                 var expireExists = subInfoDic.TryGetValue("expire", out var expire);
                 
-
                 await File.WriteAllTextAsync(address, yaml, Encoding.UTF8);
 
                 ProfileItem profileItem = new ProfileItem
@@ -82,12 +85,12 @@ public partial class ProfilesViewModel : ObservableObject
                     FileName = filename,
                     IndexId = Guid.NewGuid(),
                     Expire = expireExists ? DateTimeOffset.FromUnixTimeSeconds(long.Parse(expire)) : DateTimeOffset.MinValue,
-                    Download = downloadExists ? $"{ulong.Parse(download) / 1024 / 1024 / 1024}G" : "0",
-                    Total = totalExists ? $"{ulong.Parse(total) / 1024 / 1024 / 1024}G" : "0"
+                    Download = downloadExists ? ulong.Parse(download) / 1024 / 1024 / 1024 : 0,
+                    Total = totalExists ? ulong.Parse(total) / 1024 / 1024 / 1024 : 0
                 };
                 
                 localConfig.ProfileItems.Add(profileItem);
-
+                
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     ProfileItems.Add(profileItem);
@@ -121,40 +124,90 @@ public partial class ProfilesViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ProfileQrcode()
+    {
+        
+    }
+
+    [RelayCommand]
+    private void OpenHomeUrl()
+    {
+        var url = ProfileItems[SelectProfileItemIndex].HomeUrl;
+        if (!string.IsNullOrEmpty(url))
+        {
+            try
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    url = url.Replace("&", "^&");
+                    var info = new ProcessStartInfo(url)
+                    {
+                        UseShellExecute = true
+                    };
+                    Process.Start(info);
+                }
+                else if (OperatingSystem.IsLinux())
+                {
+                    Process.Start("xdg-open", url);
+                }
+                else if (OperatingSystem.IsMacOS())
+                {
+                    Process.Start("open", url);
+                }
+ 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+    }
+
+    [RelayCommand]
     private void ShowInFolder()
     {
-        var path = "Test";
-        if (OperatingSystem.IsWindows())
+        var path = ProfileItems[SelectProfileItemIndex].Address;
+        try
         {
-            using Process fileOpener = new Process();
-            fileOpener.StartInfo.FileName = "explorer";
-            fileOpener.StartInfo.Arguments = $"/select, {path}";
-            fileOpener.Start();
-        }
-        else if (OperatingSystem.IsMacOS())
-        {
-            using Process fileOpener = new Process();
-            fileOpener.StartInfo.FileName = "explorer";
-            fileOpener.StartInfo.Arguments = $"-R {path}";
-            fileOpener.Start();
-        }
-        else if (OperatingSystem.IsLinux())
-        {
-            using Process dbusShowItemsProcess = new Process();
-            dbusShowItemsProcess.StartInfo = new ProcessStartInfo
+            if (OperatingSystem.IsWindows())
             {
-                FileName = "dbus-send",
-                Arguments = "--print-reply --dest=org.freedesktop.FileManager1 /org/freedesktop/FileManager1 org.freedesktop.FileManager1.ShowItems array:string:\"file://"+ path +"\" string:\"\"",
-                UseShellExecute = true
-            };
-            dbusShowItemsProcess.Start();
+                using Process fileOpener = new Process();
+                fileOpener.StartInfo.FileName = "explorer";
+                fileOpener.StartInfo.Arguments = $"/select, {path}";
+                fileOpener.Start();
+            }
+            else if (OperatingSystem.IsMacOS())
+            {
+                using Process fileOpener = new Process();
+                fileOpener.StartInfo.FileName = "explorer";
+                fileOpener.StartInfo.Arguments = $"-R {path}";
+                fileOpener.Start();
+            }
+            else if (OperatingSystem.IsLinux())
+            {
+                using Process dbusShowItemsProcess = new Process();
+                dbusShowItemsProcess.StartInfo = new ProcessStartInfo
+                {
+                    FileName = "dbus-send",
+                    Arguments = "--print-reply --dest=org.freedesktop.FileManager1 /org/freedesktop/FileManager1 org.freedesktop.FileManager1.ShowItems array:string:\"file://"+ path +"\" string:\"\"",
+                    UseShellExecute = true
+                };
+                dbusShowItemsProcess.Start();
+            }
+            else
+            {
+                using Process fileOpener = new Process();
+                fileOpener.StartInfo.FileName = Path.GetDirectoryName(path);
+                fileOpener.StartInfo.UseShellExecute = true;
+                fileOpener.Start();
+            }
         }
-        else
+        catch (Exception e)
         {
-            using Process fileOpener = new Process();
-            fileOpener.StartInfo.FileName = Path.GetDirectoryName(path);
-            fileOpener.StartInfo.UseShellExecute = true;
-            fileOpener.Start();
+            Console.WriteLine(e);
+            throw;
         }
+        
     }
 }

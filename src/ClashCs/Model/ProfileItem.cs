@@ -20,9 +20,9 @@ public partial class ProfileItem
     
     public ulong Upload { get; set; }
     
-    public string Download { get; set; }
+    public ulong Download { get; set; }
     
-    public string Total { get; set; }
+    public ulong Total { get; set; }
     
     public DateTimeOffset Expire { get; set; }
 }

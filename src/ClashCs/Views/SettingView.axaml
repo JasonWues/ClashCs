@@ -13,16 +13,12 @@
     </UserControl.DataContext>
 
     <ScrollViewer>
-        <fa:SettingsExpander Header="BaseConfig">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Settings Editor" VerticalAlignment="Center" />
-                <fa:FAComboBox VerticalAlignment="Top">
-                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
-                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
-                    <fa:FAComboBoxItem>ssdd</fa:FAComboBoxItem>
-                </fa:FAComboBox>
-            </StackPanel>
-        </fa:SettingsExpander>
+        <StackPanel>
+            <fa:SettingsExpander Header="sss"  Description="开机启动" IsClickEnabled="False" >
+                <ToggleSwitch></ToggleSwitch>
+            </fa:SettingsExpander>
+        </StackPanel>
+
     </ScrollViewer>
 
 </UserControl>

@@ -5,8 +5,7 @@
              xmlns:viewModels="clr-namespace:ClashCs.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ClashCs.Views.ProfilesView"
-             x:DataType="viewModels:ProfilesViewModel"
-             xmlns:fa="using:FluentAvalonia.UI.Controls">
+             x:DataType="viewModels:ProfilesViewModel">
 
     <UserControl.DataContext>
         <viewModels:ProfilesViewModel />
@@ -14,40 +13,40 @@
 
     <Grid RowDefinitions="Auto,9*">
         <StackPanel Grid.Row="0" Spacing="3" Orientation="Horizontal">
-            <TextBox Text="{CompiledBinding ProfilesLink}" Width="300" />
-            <Button Content="Download" Command="{CompiledBinding DownloadCommand}" />
-            <Button Content="Update All" Command="{CompiledBinding UpdateAllCommand}" />
+            <TextBox Text="{Binding ProfilesLink}" Width="400" />
+            <Button Content="Download" Command="{Binding DownloadCommand}" />
+            <Button Content="Update All" Command="{Binding UpdateAllCommand}" />
         </StackPanel>
-        <ListBox Grid.Row="1" 
-                 x:Name="Profiles" 
+        <ListBox Grid.Row="1"
+                 x:Name="Profiles"
                  BorderThickness="0"
-                 ItemsSource="{Binding ProfileItems}">
+                 ItemsSource="{Binding ProfileItems}"
+                 SelectedIndex="{Binding SelectProfileItemIndex}"
+                 >
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal"></WrapPanel>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
-            <ListBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="在文件夹中显示" Command="{CompiledBinding ShowInFolderCommand}"></MenuItem>
-                </ContextMenu>
-            </ListBox.ContextMenu>
+            <ListBox.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuItem Header="Open HomeSite" Command="{Binding OpenHomeUrlCommand}"></MenuItem>
+                        <MenuItem Header="Show In Folder" Command="{Binding ShowInFolderCommand }"></MenuItem>
+                    </MenuFlyout>
+            </ListBox.ContextFlyout>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Width="280" Padding="0" CornerRadius="4">
-                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-                            <TextBlock Text="{CompiledBinding FileName}"/>
-                            <Separator Grid.Row="1"></Separator>
-                            <TextBlock Grid.Row="2" Text="{CompiledBinding HomeUrl}"/>
-                            <Separator Grid.Row="3"></Separator>
-                            <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="3">
-                                <TextBlock Text="{CompiledBinding Download}"/>
-                                <TextBlock Text="{CompiledBinding Total}"/>
-                                <TextBlock Text="{CompiledBinding Expire}"/>
-
-                            </StackPanel>
-                        </Grid>
-                    </Border>
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Classes="BaseTextBlockStyle BodyStrongTextBlockStyle" Text="{Binding FileName}" />
+                        <Separator Grid.Row="1" Margin="0,3"></Separator>
+                        <TextBlock Grid.Row="2" Classes="BaseTextBlockStyle BodyTextBlockStyle" Text="{Binding HomeUrl}" />
+                        <Separator Grid.Row="3" Margin="0,3"></Separator>
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="3">
+                            <TextBlock Classes="BaseTextBlockStyle BodyTextBlockStyle" Text="{Binding Download,StringFormat= {}{0}G}" />
+                            <TextBlock Classes="BaseTextBlockStyle BodyTextBlockStyle" Text="{Binding Total,StringFormat= {}{0}G}" />
+                            <TextBlock Classes="BaseTextBlockStyle BodyTextBlockStyle" Text="{Binding Expire}" />
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
