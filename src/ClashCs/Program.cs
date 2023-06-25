@@ -25,7 +25,11 @@ internal class Program
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace();
+            .LogToTrace()
+            .With(new Win32PlatformOptions()
+            {
+                CompositionBackdropCornerRadius = 8f
+            });
 
     }
 }

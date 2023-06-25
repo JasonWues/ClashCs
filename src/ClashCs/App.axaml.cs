@@ -14,6 +14,8 @@ public class App : Application
 {
     public IServiceProvider Services { get; private set; } = null!;
 
+    public TrayIcon TrayIcon { get; private set; } = null!;
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -55,8 +57,13 @@ public class App : Application
 
     private void ConfigTray()
     {
-        var notifyIcon = new TrayIcon();
-        notifyIcon.Menu ??= new NativeMenu();
-        notifyIcon.ToolTipText = "ClashCs";
+        TrayIcon = new TrayIcon();
+        TrayIcon.Menu ??= new NativeMenu();
+        TrayIcon.ToolTipText = "ClashCs";
+        TrayIcon.Clicked += (sender, args) =>
+        {
+            var desktop = ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+            desktop.MainWindow.Show();
+        };
     }
 }

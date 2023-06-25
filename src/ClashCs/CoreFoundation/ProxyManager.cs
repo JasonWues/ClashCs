@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using ClashCs.Config;
 
 namespace ClashCs.CoreFoundation;
 
@@ -10,6 +11,8 @@ public class ProxyManager
 
     private void SysproxyInvoke(string arguments)
     {
+        var localConfig = LazyConfig.Instance.Value.LocalConfig;
+
         if (OperatingSystem.IsWindows())
         {
             using var outputWaitHandle = new AutoResetEvent(false);
@@ -80,7 +83,7 @@ public class ProxyManager
                 throw new Exception(stderr);
             }
         }
-        else if (OperatingSystem.IsLinux())
+        else if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
         {
             var process = new Process
             {
@@ -94,9 +97,10 @@ public class ProxyManager
                 }
             };
             process.Start();
-
-            //TODO set proxy
-            process.StandardInput.WriteLine("");
+            
+            process.StandardInput.WriteLine($"export http_proxy {Global.Loopback}:{localConfig.HttpPort}");
+            process.StandardInput.WriteLine($"export socks_proxy {Global.Loopback}:{localConfig.SocksPort}");
+            
         }
 
     }

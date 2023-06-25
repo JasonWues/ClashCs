@@ -37,8 +37,10 @@ public partial class MainWindow : AppWindow
 
     private void MainNav_OnSelectionChanged(object? sender, NavigationViewSelectionChangedEventArgs e)
     {
+        var view = sender as NavigationView;
         if (e.SelectedItemContainer is NavigationViewItem item)
         {
+            view.Header = item.Tag.ToString();
             switch (item.Tag)
             {
                 case "Dashboard":
@@ -85,5 +87,11 @@ public partial class MainWindow : AppWindow
     private void MainNav_OnLoaded(object? sender, RoutedEventArgs e)
     {
         MainNav.SelectedItem = MainNav.MenuItems[0];
+    }
+
+    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        e.Cancel = true;
+        Hide();
     }
 }

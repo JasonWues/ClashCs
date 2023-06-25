@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
+        <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
@@ -14,8 +14,27 @@
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <IsWindows Condition="$([MSBuild]::IsOSPlatform('Windows'))">true</IsWindows>
+        <IsLinux Condition="$([MSBuild]::IsOSPlatform('Linux'))">true</IsLinux>
+        <IsOSX Condition="$([MSBuild]::IsOSPlatform('OSX'))">true</IsOSX>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TrimMode>link</TrimMode>
+        <!--These can help when debugging weird exceptions especially when reflection is involved. See https://github.com/dotnet/corert/blob/master/Documentation/using-corert/optimizing-corert.md -->
+        <!--RootAllApplicationAssemblies: False -> TrimMode:link See https://github.com/dotnet/runtimelab/issues/597 and https://github.com/dotnet/runtimelab/blob/feature/NativeAOT/docs/using-nativeaot/optimizing.md -->
+        <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+        <IlcGenerateStackTraceData Condition="'$(Configuration.toUpper())' != 'DEBUG'">false</IlcGenerateStackTraceData>
+        <IlcDisableUnhandledExceptionExperience>true</IlcDisableUnhandledExceptionExperience>
+        <StripSymbols Condition="'$(Configuration.toUpper())' != 'DEBUG'">true</StripSymbols>
+        <OptimizationPreference>Speed</OptimizationPreference>
+    </PropertyGroup>
+
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets/**" />
+        <RdXmlFile Include="rd.xml" />
+        <RuntimeHostConfigurationOption Include="Switch.System.Reflection.Assembly.SimulatedCallingAssembly" Value="true" />
     </ItemGroup>
 
 
@@ -28,8 +47,8 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0"/>
         <PackageReference Include="FluentAvaloniaUI" Version="2.0.0-rc1"/>
         <PackageReference Include="MemoryPack" Version="1.9.16"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.5.23280.8"/>
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.5.23280.8"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.5.23280.8" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.5.23280.8" />
         <PackageReference Include="Vecc.YamlDotNet.Analyzers.StaticGenerator" Version="13.0.2"/>
         <PackageReference Include="YamlDotNet" Version="13.1.1"/>
     </ItemGroup>
