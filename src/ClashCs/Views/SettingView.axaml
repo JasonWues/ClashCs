@@ -7,15 +7,15 @@
              x:Class="ClashCs.Views.SettingView"
              xmlns:fa="using:FluentAvalonia.UI.Controls"
              x:DataType="viewModels:SettingViewModel">
-    
+
     <UserControl.DataContext>
         <viewModels:SettingViewModel />
     </UserControl.DataContext>
 
     <ScrollViewer>
         <StackPanel>
-            <fa:SettingsExpander Header="sss"  Description="开机启动" IsExpanded="False" >
-                <ToggleSwitch></ToggleSwitch>
+            <fa:SettingsExpander Header="sss" Description="开机启动" IsExpanded="False">
+                <ToggleSwitch />
             </fa:SettingsExpander>
         </StackPanel>
 

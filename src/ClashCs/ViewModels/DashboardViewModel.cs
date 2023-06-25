@@ -8,9 +8,9 @@ public class DashboardViewModel : ObservableObject
     {
         Init();
     }
-    
+
     public void Init()
     {
-        
+
     }
 }

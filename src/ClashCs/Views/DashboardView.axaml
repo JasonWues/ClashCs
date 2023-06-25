@@ -6,9 +6,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ClashCs.Views.DashboardView"
              x:DataType="viewModels:ProfilesViewModel">
-    
+
     <UserControl.DataContext>
         <viewModels:DashboardViewModel />
     </UserControl.DataContext>
-    
+
 </UserControl>

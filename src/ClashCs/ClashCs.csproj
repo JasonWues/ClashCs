@@ -15,22 +15,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
 
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.0-rc1.1" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-rc1.1" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Avalonia" Version="11.0.0-rc1.1"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-rc1.1"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-rc1.1"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-rc1.1" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
-        <PackageReference Include="FluentAvaloniaUI" Version="2.0.0-rc1" />
-        <PackageReference Include="MemoryPack" Version="1.9.16" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.5.23280.8" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.5.23280.8" />
-        <PackageReference Include="Vecc.YamlDotNet.Analyzers.StaticGenerator" Version="13.0.2" />
-        <PackageReference Include="YamlDotNet" Version="13.1.1" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-rc1.1"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0"/>
+        <PackageReference Include="FluentAvaloniaUI" Version="2.0.0-rc1"/>
+        <PackageReference Include="MemoryPack" Version="1.9.16"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.5.23280.8"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.5.23280.8"/>
+        <PackageReference Include="Vecc.YamlDotNet.Analyzers.StaticGenerator" Version="13.0.2"/>
+        <PackageReference Include="YamlDotNet" Version="13.1.1"/>
     </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@ public static class ConfigManager
             {
                 Directory.CreateDirectory(Global.LocalConfigDicPath);
             }
-            
+
             await util.SaveConfigAsync(localConfig);
         }
         else

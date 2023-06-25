@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ClashCs.Model;
 using MemoryPack;
 
@@ -15,7 +14,7 @@ public partial class LocalConfig
     public int HttpPort { get; set; } = 7890;
 
     public int SocksPort { get; set; } = 7891;
-    
+
     public int ApiPort { get; set; } = 9090;
 
     public bool EnableIpv6 { get; set; }
@@ -25,5 +24,4 @@ public partial class LocalConfig
     public bool EnableTun { get; set; }
 
     public List<ProfileItem> ProfileItems { get; set; } = new List<ProfileItem>();
-    
 }

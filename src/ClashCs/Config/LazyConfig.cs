@@ -10,10 +10,11 @@ public class LazyConfig
     {
         LocalConfig = new LocalConfig();
     }
+
+    public LocalConfig LocalConfig { get; private set; }
+
     public void SetLocalConfig(LocalConfig localConfig)
     {
         LocalConfig = localConfig;
     }
-
-    public LocalConfig LocalConfig { get; private set; }
 }

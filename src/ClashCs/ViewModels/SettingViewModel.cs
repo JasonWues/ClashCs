@@ -12,7 +12,7 @@ public partial class SettingViewModel : ObservableObject
     {
         try
         {
-            
+
         }
         catch (Exception e)
         {
@@ -20,5 +20,4 @@ public partial class SettingViewModel : ObservableObject
             throw;
         }
     }
-    
 }

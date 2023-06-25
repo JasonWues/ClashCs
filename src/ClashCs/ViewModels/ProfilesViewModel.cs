@@ -22,21 +22,21 @@ namespace ClashCs.ViewModels;
 public partial class ProfilesViewModel : ObservableObject
 {
     readonly private LocalConfig localConfig;
-    
+
+    [ObservableProperty]
+    private ObservableCollection<ProfileItem> profileItems = new ObservableCollection<ProfileItem>();
+
+    [ObservableProperty]
+    private string profilesLink;
+
+    [ObservableProperty]
+    private ProfileItem selectProfileItem;
+
     public ProfilesViewModel()
     {
         localConfig = LazyConfig.Instance.Value.LocalConfig;
         ProfileItems.AddRange(localConfig.ProfileItems);
     }
-    
-    [ObservableProperty]
-    private ObservableCollection<ProfileItem> profileItems = new ObservableCollection<ProfileItem>();
-
-    [ObservableProperty]
-    private ProfileItem selectProfileItem;
-    
-    [ObservableProperty]
-    private string profilesLink;
 
     [RelayCommand]
     private async Task DownloadAsync()
@@ -57,7 +57,7 @@ public partial class ProfilesViewModel : ObservableObject
                 var homeUrlExists = response.Headers.TryGetValues("profile-web-page-url", out var homeUrl);
 
                 var yaml = await response.Content.ReadAsStringAsync();
-                
+
                 var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
                 var stringBuilder = new StringBuilder(13);
                 stringBuilder.Append(timestamp).Append(".yaml");
@@ -66,42 +66,38 @@ public partial class ProfilesViewModel : ObservableObject
                     Directory.CreateDirectory(Global.ProfilesDicPath);
                 }
 
-                var subInfoDic = subInfo != null && subInfo.Any() ? subInfo.FirstOrDefault().Split(';')
-                    .ToDictionary(x => x.Split('=')?[0]?.Trim(), x => x.Split('=')?[1]) : new Dictionary<string, string>();
-                
+                var subInfoDic = subInfo != null && subInfo.Any()
+                    ? subInfo.FirstOrDefault().Split(';')
+                        .ToDictionary(x => x.Split('=')?[0]?.Trim(), x => x.Split('=')?[1])
+                    : new Dictionary<string, string>();
+
                 var address = Path.Join(Global.ProfilesDicPath, stringBuilder.ToString());
-                
-                
+
+
                 var downloadExists = subInfoDic.TryGetValue("download", out var download);
                 var totalExists = subInfoDic.TryGetValue("total", out var total);
                 var expireExists = subInfoDic.TryGetValue("expire", out var expire);
-                
+
                 await File.WriteAllTextAsync(address, yaml, Encoding.UTF8);
 
-                ProfileItem profileItem = new ProfileItem
+                var profileItem = new ProfileItem
                 {
                     Url = ProfilesLink,
                     HomeUrl = homeUrlExists ? homeUrl.FirstOrDefault() : null,
                     Address = address,
                     FileName = filename,
                     IndexId = Guid.NewGuid(),
-                    Expire = expireExists ? DateTimeOffset.FromUnixTimeSeconds(long.Parse(expire)) : DateTimeOffset.MinValue,
+                    Expire =
+                        expireExists ? DateTimeOffset.FromUnixTimeSeconds(long.Parse(expire)) : DateTimeOffset.MinValue,
                     Download = downloadExists ? ulong.Parse(download) / 1024 / 1024 / 1024 : 0,
                     Total = totalExists ? ulong.Parse(total) / 1024 / 1024 / 1024 : 0
                 };
-                
+
                 localConfig.ProfileItems.Add(profileItem);
-                
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    ProfileItems.Add(profileItem);
-                });
+
+                await Dispatcher.UIThread.InvokeAsync(() => { ProfileItems.Add(profileItem); });
 
                 await Util.Instance.Value.SaveConfigAsync(localConfig);
-            }
-            else
-            {
-                
             }
         }
         catch (Exception e)
@@ -109,7 +105,7 @@ public partial class ProfilesViewModel : ObservableObject
             Console.WriteLine(e);
             throw;
         }
-        
+
     }
 
     [RelayCommand]
@@ -121,13 +117,15 @@ public partial class ProfilesViewModel : ObservableObject
     [RelayCommand]
     private void DeleteProfile()
     {
-        
+
     }
 
     [RelayCommand]
     private void ProfileQrcode()
     {
-        var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null;
+        var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
         var dialog = new QrcodeView();
         dialog.ShowDialog(mainWindow!);
     }
@@ -157,7 +155,7 @@ public partial class ProfilesViewModel : ObservableObject
                 {
                     Process.Start("open", url);
                 }
- 
+
             }
             catch (Exception e)
             {
@@ -175,32 +173,34 @@ public partial class ProfilesViewModel : ObservableObject
         {
             if (OperatingSystem.IsWindows())
             {
-                using Process fileOpener = new Process();
+                using var fileOpener = new Process();
                 fileOpener.StartInfo.FileName = "explorer";
                 fileOpener.StartInfo.Arguments = $"/select, {path}";
                 fileOpener.Start();
             }
             else if (OperatingSystem.IsMacOS())
             {
-                using Process fileOpener = new Process();
+                using var fileOpener = new Process();
                 fileOpener.StartInfo.FileName = "explorer";
                 fileOpener.StartInfo.Arguments = $"-R {path}";
                 fileOpener.Start();
             }
             else if (OperatingSystem.IsLinux())
             {
-                using Process dbusShowItemsProcess = new Process();
+                using var dbusShowItemsProcess = new Process();
                 dbusShowItemsProcess.StartInfo = new ProcessStartInfo
                 {
                     FileName = "dbus-send",
-                    Arguments = "--print-reply --dest=org.freedesktop.FileManager1 /org/freedesktop/FileManager1 org.freedesktop.FileManager1.ShowItems array:string:\"file://"+ path +"\" string:\"\"",
+                    Arguments =
+                        "--print-reply --dest=org.freedesktop.FileManager1 /org/freedesktop/FileManager1 org.freedesktop.FileManager1.ShowItems array:string:\"file://" +
+                        path + "\" string:\"\"",
                     UseShellExecute = true
                 };
                 dbusShowItemsProcess.Start();
             }
             else
             {
-                using Process fileOpener = new Process();
+                using var fileOpener = new Process();
                 fileOpener.StartInfo.FileName = Path.GetDirectoryName(path);
                 fileOpener.StartInfo.UseShellExecute = true;
                 fileOpener.Start();
@@ -211,6 +211,6 @@ public partial class ProfilesViewModel : ObservableObject
             Console.WriteLine(e);
             throw;
         }
-        
+
     }
 }

@@ -5,5 +5,4 @@ namespace ClashCs;
 [YamlStaticContext]
 public partial class ClashYamlContext : StaticContext
 {
-     
 }

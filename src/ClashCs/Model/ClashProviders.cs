@@ -7,7 +7,6 @@ namespace ClashCs.Model;
 public class ClashProviders
 {
     public Dictionary<string, ProvidersItem> providers { get; set; }
-    
 }
 
 [YamlSerializable]

@@ -2,6 +2,9 @@
 using System.IO;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using ClashCs.Config;
 using MemoryPack;
 using YamlDotNet.Serialization;
@@ -11,7 +14,7 @@ namespace ClashCs.Tool;
 
 public class Util
 {
-    public readonly static Lazy<Util> Instance = new(() => new Util());
+    public readonly static Lazy<Util> Instance = new Lazy<Util>(() => new Util());
 
     public Util()
     {
@@ -22,14 +25,16 @@ public class Util
             .Build();
     }
 
+    private IDeserializer DeserializerInstead { get; }
+
     public bool IsAdministrator()
     {
         if (OperatingSystem.IsWindows())
         {
             try
             {
-                WindowsIdentity current = WindowsIdentity.GetCurrent();
-                WindowsPrincipal windowsPrincipal = new(current);
+                var current = WindowsIdentity.GetCurrent();
+                WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
                 return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
             }
             catch (Exception e)
@@ -39,19 +44,14 @@ public class Util
             }
 
         }
-        else
-        {
-            return true;
-        }
+        return true;
     }
-    
-    private IDeserializer DeserializerInstead { get; set; }
-    
+
     public T Deserializer<T>(string input) where T : new()
     {
         try
         {
-            
+
             if (!string.IsNullOrEmpty(input))
             {
                 return DeserializerInstead.Deserialize<T>(input);
@@ -65,8 +65,17 @@ public class Util
             throw;
         }
     }
-    
-    
+
+    public async Task<string> GetClipboardData()
+    {
+        var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
+        
+        var toplevel = TopLevel.GetTopLevel(mainWindow);
+        return await toplevel.Clipboard.GetTextAsync();
+    }
+
     public async ValueTask SaveConfigAsync(LocalConfig localConfig)
     {
         try
@@ -121,5 +130,4 @@ public class Util
             throw;
         }
     }
-    
 }

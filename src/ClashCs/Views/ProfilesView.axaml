@@ -21,30 +21,33 @@
                  x:Name="Profiles"
                  BorderThickness="0"
                  ItemsSource="{Binding ProfileItems}"
-                 SelectedIndex="{Binding SelectProfileItem}"
-                 >
+                 SelectedIndex="{Binding SelectProfileItem}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"></WrapPanel>
+                    <WrapPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuItem Header="Open HomeSite" Command="{Binding OpenHomeUrlCommand}"></MenuItem>
-                        <MenuItem Header="Show In Folder" Command="{Binding ShowInFolderCommand }"></MenuItem>
-                        <MenuItem Header="Qrcode" Command="{Binding ProfileQrcodeCommand}"></MenuItem>
-                    </MenuFlyout>
+                <MenuFlyout>
+                    <MenuItem Header="Open HomeSite" Command="{Binding OpenHomeUrlCommand}" />
+                    <MenuItem Header="Show In Folder" Command="{Binding ShowInFolderCommand }" />
+                    <MenuItem Header="Qrcode" Command="{Binding ProfileQrcodeCommand}" />
+                </MenuFlyout>
             </ListBox.ContextFlyout>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
-                        <TextBlock Grid.Row="0" Classes="BaseTextBlockStyle BodyStrongTextBlockStyle" Text="{Binding FileName}" />
-                        <Separator Grid.Row="1" Margin="0,3"></Separator>
-                        <TextBlock Grid.Row="2" Classes="BaseTextBlockStyle BodyTextBlockStyle" Text="{Binding HomeUrl}" />
-                        <Separator Grid.Row="3" Margin="0,3"></Separator>
+                        <TextBlock Grid.Row="0" Classes="BaseTextBlockStyle BodyStrongTextBlockStyle"
+                                   Text="{Binding FileName}" />
+                        <Separator Grid.Row="1" Margin="0,3" />
+                        <TextBlock Grid.Row="2" Classes="BaseTextBlockStyle BodyTextBlockStyle"
+                                   Text="{Binding HomeUrl}" />
+                        <Separator Grid.Row="3" Margin="0,3" />
                         <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="3">
-                            <TextBlock Classes="BaseTextBlockStyle BodyTextBlockStyle" Text="{Binding Download,StringFormat= {}{0}G}" />
-                            <TextBlock Classes="BaseTextBlockStyle BodyTextBlockStyle" Text="{Binding Total,StringFormat= {}{0}G}" />
+                            <TextBlock Classes="BaseTextBlockStyle BodyTextBlockStyle"
+                                       Text="{Binding Download,StringFormat= {}{0}G}" />
+                            <TextBlock Classes="BaseTextBlockStyle BodyTextBlockStyle"
+                                       Text="{Binding Total,StringFormat= {}{0}G}" />
                             <TextBlock Classes="BaseTextBlockStyle BodyTextBlockStyle" Text="{Binding Expire}" />
                         </StackPanel>
                     </Grid>

@@ -14,18 +14,18 @@ public class App : Application
 {
     public IServiceProvider Services { get; private set; } = null!;
 
-    public override void Initialize() 
+    public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
     }
 
     public override async void OnFrameworkInitializationCompleted()
     {
-        if (OperatingSystem.IsMacOS() && !OperatingSystem.IsMacOSVersionAtLeast(10,13))
+        if (OperatingSystem.IsMacOS() && !OperatingSystem.IsMacOSVersionAtLeast(10, 13))
         {
             Environment.Exit(0);
         }
-        
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             BindingPlugins.DataValidators.RemoveAt(0);
@@ -38,7 +38,7 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
         await ConfigManager.LoadConfig();
     }
-    
+
 
     public override void RegisterServices()
     {
