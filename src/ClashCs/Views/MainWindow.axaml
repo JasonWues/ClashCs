@@ -7,16 +7,17 @@
         xmlns:fa="using:FluentAvalonia.UI.Controls"
         Icon="/Assets/avalonia-logo.ico"
         Title="ClashCs">
-
+    
     <fa:NavigationView x:Name="MainNav"
                        SelectionChanged="MainNav_OnSelectionChanged"
                        Loaded="MainNav_OnLoaded">
-        <fa:NavigationView.MenuItems>
-            <fa:NavigationViewItem IconSource="Play" Content="Home" Tag="Dashboard" />
-            <fa:NavigationViewItem IconSource="Save" Content="Proxies" Tag="Proxies" />
-            <fa:NavigationViewItem IconSource="Refresh" Content="Profiles" Tag="Profiles" />
-            <fa:NavigationViewItem IconSource="Download" Content="Log" Tag="Log" />
-        </fa:NavigationView.MenuItems>
-        <fa:Frame x:Name="FrameView" />
+            <fa:NavigationView.MenuItems>
+                <fa:NavigationViewItem IconSource="Play" Content="Home" Tag="Dashboard" />
+                <fa:NavigationViewItem IconSource="Save" Content="Proxies" Tag="Proxies" />
+                <fa:NavigationViewItem IconSource="Refresh" Content="Profiles" Tag="Profiles" />
+                <fa:NavigationViewItem IconSource="Download" Content="Log" Tag="Log" />
+            </fa:NavigationView.MenuItems>
+            <fa:Frame x:Name="FrameView" />
     </fa:NavigationView>
+
 </Window>

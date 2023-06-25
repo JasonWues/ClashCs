@@ -8,11 +8,12 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using ClashCs.Config;
 using ClashCs.Model;
 using ClashCs.Tool;
+using ClashCs.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -32,7 +33,7 @@ public partial class ProfilesViewModel : ObservableObject
     private ObservableCollection<ProfileItem> profileItems = new ObservableCollection<ProfileItem>();
 
     [ObservableProperty]
-    private int selectProfileItemIndex;
+    private ProfileItem selectProfileItem;
     
     [ObservableProperty]
     private string profilesLink;
@@ -126,13 +127,15 @@ public partial class ProfilesViewModel : ObservableObject
     [RelayCommand]
     private void ProfileQrcode()
     {
-        
+        var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null;
+        var dialog = new QrcodeView();
+        dialog.ShowDialog(mainWindow!);
     }
 
     [RelayCommand]
     private void OpenHomeUrl()
     {
-        var url = ProfileItems[SelectProfileItemIndex].HomeUrl;
+        var url = SelectProfileItem?.Url;
         if (!string.IsNullOrEmpty(url))
         {
             try
@@ -167,7 +170,7 @@ public partial class ProfilesViewModel : ObservableObject
     [RelayCommand]
     private void ShowInFolder()
     {
-        var path = ProfileItems[SelectProfileItemIndex].Address;
+        var path = SelectProfileItem?.Address;
         try
         {
             if (OperatingSystem.IsWindows())

@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
-using Avalonia;
 using ClashCs.Config;
 using ClashCs.Tool;
 

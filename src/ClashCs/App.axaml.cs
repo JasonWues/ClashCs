@@ -4,11 +4,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using ClashCs.Config;
 using ClashCs.CoreFoundation;
 using ClashCs.Views;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace ClashCs;
 
@@ -40,6 +38,7 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
         await ConfigManager.LoadConfig();
     }
+    
 
     public override void RegisterServices()
     {

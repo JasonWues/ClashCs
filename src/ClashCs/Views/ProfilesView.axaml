@@ -21,7 +21,7 @@
                  x:Name="Profiles"
                  BorderThickness="0"
                  ItemsSource="{Binding ProfileItems}"
-                 SelectedIndex="{Binding SelectProfileItemIndex}"
+                 SelectedIndex="{Binding SelectProfileItem}"
                  >
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -32,6 +32,7 @@
                     <MenuFlyout>
                         <MenuItem Header="Open HomeSite" Command="{Binding OpenHomeUrlCommand}"></MenuItem>
                         <MenuItem Header="Show In Folder" Command="{Binding ShowInFolderCommand }"></MenuItem>
+                        <MenuItem Header="Qrcode" Command="{Binding ProfileQrcodeCommand}"></MenuItem>
                     </MenuFlyout>
             </ListBox.ContextFlyout>
             <ListBox.ItemTemplate>

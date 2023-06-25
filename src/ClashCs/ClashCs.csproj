@@ -11,7 +11,7 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <Authors>Metatron</Authors>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,7 +25,6 @@
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0-rc1.1" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-rc1.1" />
-        <PackageReference Include="Avalonia.Labs.Controls" Version="11.0.0-rc1.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
         <PackageReference Include="FluentAvaloniaUI" Version="2.0.0-rc1" />
         <PackageReference Include="MemoryPack" Version="1.9.16" />
