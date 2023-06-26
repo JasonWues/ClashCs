@@ -11,7 +11,7 @@
         <viewModels:ProfilesViewModel />
     </UserControl.DataContext>
 
-    <Grid RowDefinitions="Auto,9*">
+    <Grid RowDefinitions="Auto,9*" Margin="56,10,56,0">
         <StackPanel Grid.Row="0" Spacing="3" Orientation="Horizontal">
             <TextBox Text="{Binding ProfilesLink}" Width="400" />
             <Button Content="Download" Command="{Binding DownloadCommand}" />

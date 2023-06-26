@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ClashCs.Model;
 using MemoryPack;
 
 namespace ClashCs.Config;

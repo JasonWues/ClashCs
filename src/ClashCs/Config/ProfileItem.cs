@@ -1,13 +1,11 @@
 ﻿using System;
 using MemoryPack;
 
-namespace ClashCs.Model;
+namespace ClashCs.Config;
 
 [MemoryPackable]
 public partial class ProfileItem
 {
-    public Guid IndexId { get; set; }
-
     public string FileName { get; set; }
 
     public string Address { get; set; }
@@ -25,5 +23,7 @@ public partial class ProfileItem
     public ulong Total { get; set; }
 
     public DateTimeOffset Expire { get; set; }
+    
+    public bool IsActive { get; set; }
     
 }

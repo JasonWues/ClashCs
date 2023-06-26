@@ -2,7 +2,7 @@
 
 namespace ClashCs.ViewModels;
 
-public class DashboardViewModel : ObservableObject
+public partial class DashboardViewModel : ObservableObject
 {
     public DashboardViewModel()
     {

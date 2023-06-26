@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Avalonia;
 using ClashCs.Config;
 using ClashCs.Tool;
 
@@ -10,12 +13,26 @@ public class CoreManager
 {
     private Process process;
 
-    public void LoadCore(LocalConfig localConfig)
+    private CoreConfigManager coreConfigManager;
+    
+    public CoreManager()
     {
+        coreConfigManager = Application.Current.GetService<CoreConfigManager>();
+    }
+
+    public async Task LoadCore(LocalConfig localConfig)
+    {
+        var defaultProfile = localConfig.ProfileItems.FirstOrDefault(x => x.IsActive);
+        if (defaultProfile == null)
+        {
+            return;
+        }
         if (localConfig.EnableTun && !Util.Instance.Value.IsAdministrator())
         {
-
+            return;
         }
+        coreConfigManager.GenerateClientConfig(defaultProfile);
+
     }
 
     public void CoreStart()

@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using Avalonia;
 using ClashCs.Config;
+using ClashCs.Model;
 using ClashCs.Tool;
 
 namespace ClashCs.CoreFoundation;
@@ -25,7 +27,5 @@ public static class ConfigManager
         {
             LazyConfig.Instance.Value.SetLocalConfig(await util.ReadConfigAsync());
         }
-
-
     }
 }

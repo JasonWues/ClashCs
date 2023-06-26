@@ -11,7 +11,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using ClashCs.Config;
-using ClashCs.Model;
 using ClashCs.Tool;
 using ClashCs.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -86,11 +85,11 @@ public partial class ProfilesViewModel : ObservableObject
                     HomeUrl = homeUrlExists ? homeUrl.FirstOrDefault() : null,
                     Address = address,
                     FileName = filename,
-                    IndexId = Guid.NewGuid(),
                     Expire =
                         expireExists ? DateTimeOffset.FromUnixTimeSeconds(long.Parse(expire)) : DateTimeOffset.MinValue,
                     Download = downloadExists ? ulong.Parse(download) / 1024 / 1024 / 1024 : 0,
-                    Total = totalExists ? ulong.Parse(total) / 1024 / 1024 / 1024 : 0
+                    Total = totalExists ? ulong.Parse(total) / 1024 / 1024 / 1024 : 0,
+                    IsActive = true
                 };
 
                 localConfig.ProfileItems.Add(profileItem);

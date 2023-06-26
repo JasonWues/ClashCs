@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using ClashCs.Config;
 using ClashCs.CoreFoundation;
 using ClashCs.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +53,7 @@ public class App : Application
     {
         var services = new ServiceCollection();
         services.AddHttpClient();
+        services.AddSingleton<CoreConfigManager>();
         return services.BuildServiceProvider();
     }
 
