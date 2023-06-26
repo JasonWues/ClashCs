@@ -54,6 +54,7 @@ public class App : Application
         var services = new ServiceCollection();
         services.AddHttpClient();
         services.AddSingleton<CoreConfigManager>();
+        services.AddSingleton<CoreManager>();
         return services.BuildServiceProvider();
     }
 

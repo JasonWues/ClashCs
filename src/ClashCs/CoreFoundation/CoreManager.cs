@@ -20,8 +20,9 @@ public class CoreManager
         coreConfigManager = Application.Current.GetService<CoreConfigManager>();
     }
 
-    public async Task LoadCore(LocalConfig localConfig)
+    public async Task LoadCoreAsync()
     {
+        var localConfig = LazyConfig.Instance.Value.LocalConfig;
         var defaultProfile = localConfig.ProfileItems.FirstOrDefault(x => x.IsActive);
         if (defaultProfile == null)
         {
@@ -31,7 +32,7 @@ public class CoreManager
         {
             return;
         }
-        coreConfigManager.GenerateClientConfig(defaultProfile);
+        coreConfigManager.GenerateClientConfigAsync(defaultProfile);
 
     }
 

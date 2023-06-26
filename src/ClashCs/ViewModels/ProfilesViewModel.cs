@@ -83,7 +83,7 @@ public partial class ProfilesViewModel : ObservableObject
                 {
                     Url = ProfilesLink,
                     HomeUrl = homeUrlExists ? homeUrl.FirstOrDefault() : null,
-                    Address = address,
+                    Address = address,  
                     FileName = filename,
                     Expire =
                         expireExists ? DateTimeOffset.FromUnixTimeSeconds(long.Parse(expire)) : DateTimeOffset.MinValue,

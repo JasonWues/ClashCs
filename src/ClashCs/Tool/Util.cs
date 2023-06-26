@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ public class Util
     public Util()
     {
         var context = new ClashYamlContext();
-        DeserializerInstead = new StaticDeserializerBuilder(context)
+        DeserializerInstead = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .IgnoreUnmatchedProperties()
             .Build();

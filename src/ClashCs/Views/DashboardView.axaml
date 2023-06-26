@@ -5,10 +5,16 @@
              xmlns:viewModels="clr-namespace:ClashCs.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ClashCs.Views.DashboardView"
-             x:DataType="viewModels:ProfilesViewModel">
+             x:DataType="viewModels:DashboardViewModel">
 
     <UserControl.DataContext>
         <viewModels:DashboardViewModel />
     </UserControl.DataContext>
+    
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCoreCommand}"></InvokeCommandAction>
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
 
 </UserControl>
