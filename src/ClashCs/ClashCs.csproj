@@ -4,20 +4,24 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-        <PublishAot>true</PublishAot>
-        <PublishTrimmed>true</PublishTrimmed>
-        <SelfContained>true</SelfContained>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Authors>Metatron</Authors>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+        <Authors>Metatron</Authors>
     </PropertyGroup>
 
     <PropertyGroup>
         <IsWindows Condition="$([MSBuild]::IsOSPlatform('Windows'))">true</IsWindows>
         <IsLinux Condition="$([MSBuild]::IsOSPlatform('Linux'))">true</IsLinux>
         <IsOSX Condition="$([MSBuild]::IsOSPlatform('OSX'))">true</IsOSX>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <PublishAot>true</PublishAot>
+        <PublishTrimmed>true</PublishTrimmed>
+        <SelfContained>true</SelfContained>
+        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -28,13 +32,15 @@
         <IlcGenerateStackTraceData Condition="'$(Configuration.toUpper())' != 'DEBUG'">false</IlcGenerateStackTraceData>
         <IlcDisableUnhandledExceptionExperience>true</IlcDisableUnhandledExceptionExperience>
         <StripSymbols Condition="'$(Configuration.toUpper())' != 'DEBUG'">true</StripSymbols>
-        <OptimizationPreference>Speed</OptimizationPreference>
+        <OptimizationPreference>Size</OptimizationPreference>
     </PropertyGroup>
 
     <ItemGroup>
+        <TrimmerRootDescriptor Include="link.xml" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <AvaloniaResource Include="Assets/**" />
-        <RdXmlFile Include="rd.xml" />
-        <RuntimeHostConfigurationOption Include="Switch.System.Reflection.Assembly.SimulatedCallingAssembly" Value="true" />
     </ItemGroup>
 
 

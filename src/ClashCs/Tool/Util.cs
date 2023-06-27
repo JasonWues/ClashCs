@@ -20,7 +20,7 @@ public class Util
     public Util()
     {
         var context = new ClashYamlContext();
-        DeserializerInstead = new DeserializerBuilder()
+        DeserializerInstead = new StaticDeserializerBuilder(context)
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .IgnoreUnmatchedProperties()
             .Build();

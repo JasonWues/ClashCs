@@ -1,5 +1,0 @@
-﻿<Directives>
-    <Application>
-        <Assembly Name="FluentAvalonia" Dynamic="Required All"/>
-    </Application>
-</Directives>

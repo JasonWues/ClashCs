@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -35,6 +36,14 @@ public partial class MainWindow : AppWindow
         }
     }
 
+
+    protected override void OnLoaded()
+    {
+        base.OnLoaded();
+        MainNav.MenuItemsSource = GetNavigationViewItems();
+        FrameView.Navigate(typeof(DashboardView));
+    }
+
     private void MainNav_OnSelectionChanged(object? sender, NavigationViewSelectionChangedEventArgs e)
     {
         var view = sender as NavigationView;
@@ -55,6 +64,33 @@ public partial class MainWindow : AppWindow
             }
 
         }
+    }
+    
+    private List<NavigationViewItem> GetNavigationViewItems()
+    {
+        return new List<NavigationViewItem>
+        {
+            new NavigationViewItem
+            {
+                Content = "Home",
+                Tag = "Dashboard",
+            },
+            new NavigationViewItem
+            {
+                Content = "Proxies",
+                Tag = "Proxies",
+            },
+            new NavigationViewItem
+            {
+                Content = "Profiles",
+                Tag = "Profiles",
+            },
+            new NavigationViewItem
+            {
+                Content = "Log",
+                Tag = "Log",
+            },
+        };
     }
 
     private void TryEnableMicaEffect()
@@ -82,11 +118,6 @@ public partial class MainWindow : AppWindow
 
             Background = new ImmutableSolidColorBrush(color, 0.9);
         }
-    }
-
-    private void MainNav_OnLoaded(object? sender, RoutedEventArgs e)
-    {
-        MainNav.SelectedItem = MainNav.MenuItems[0];
     }
 
     private void Window_OnClosing(object? sender, WindowClosingEventArgs e)

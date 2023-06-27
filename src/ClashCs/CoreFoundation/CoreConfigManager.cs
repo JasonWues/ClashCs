@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using ClashCs.Config;
 using ClashCs.Model;
 using ClashCs.Tool;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace ClashCs.CoreFoundation;
 
@@ -31,29 +33,38 @@ public class CoreConfigManager
             {
                 return;
             }
+
+
+            var yaml = await File.ReadAllTextAsync(address);
             
-            var fileLines = File.ReadLinesAsync(address);
+            var z  = new DeserializerBuilder()
+                .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                .IgnoreUnmatchedProperties()
+                .Build();
+
+            var zx = z.Deserialize(new StringReader(yaml));
+
+            /*var fileLines = File.ReadLinesAsync(address);
             var localConfig = LazyConfig.Instance.Value.LocalConfig;
             StringBuilder stringBuilder = new StringBuilder();
             await foreach (var content in fileLines)
             {
                 var content2 = content switch
                 {
-                    string s when s.StartsWith("port:") => $"port: {localConfig.HttpPort}",
-                    string s when s.StartsWith("mixed-port:") => $"mixed-port: {localConfig.MixedPort}",
-                    string s when s.StartsWith("socks-port:") => $"socks-port {localConfig.SocksPort}",
-                    string s when s.StartsWith("log-level:") => $"log-level: {localConfig.LogLevel}",
-                    string s when s.StartsWith("external-controller:") => $"external-controller: {Global.Loopback}:{localConfig.ApiPort}",
-                    string s when s.StartsWith("ipv6:") => $"ipv6: {localConfig.EnableIpv6}",
+                    { } s when s.StartsWith("port:") => $"port: {localConfig.HttpPort}",
+                    { } s when s.StartsWith("mixed-port:") => $"mixed-port: {localConfig.MixedPort}",
+                    { } s when s.StartsWith("socks-port:") => $"socks-port {localConfig.SocksPort}",
+                    { } s when s.StartsWith("log-level:") => $"log-level: {localConfig.LogLevel}",
+                    { } s when s.StartsWith("external-controller:") => $"external-controller: {Global.Loopback}:{localConfig.ApiPort}",
+                    { } s when s.StartsWith("ipv6:") => $"ipv6: {localConfig.EnableIpv6}",
 
-                    
+
                     _ => content
                 };
                 stringBuilder.AppendLine(content2);
             }
 
-            var file = stringBuilder.ToString();
-
+            var file = stringBuilder.ToString();*/
 
         }
         catch (Exception e)
