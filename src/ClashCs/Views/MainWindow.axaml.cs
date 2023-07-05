@@ -36,10 +36,9 @@ public partial class MainWindow : AppWindow
         }
     }
 
-
-    protected override void OnLoaded()
+    protected override void OnLoaded(RoutedEventArgs e)
     {
-        base.OnLoaded();
+        base.OnLoaded(e);
         MainNav.MenuItemsSource = GetNavigationViewItems();
         FrameView.Navigate(typeof(DashboardView));
     }

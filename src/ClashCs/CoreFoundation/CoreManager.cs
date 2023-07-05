@@ -23,7 +23,7 @@ public class CoreManager
     public async Task LoadCoreAsync()
     {
         var localConfig = LazyConfig.Instance.Value.LocalConfig;
-        var defaultProfile = localConfig.ProfileItems.FirstOrDefault(x => x.IsActive);
+        var defaultProfile = localConfig?.ProfileItems?.FirstOrDefault(x => x.IsActive);
         if (defaultProfile == null)
         {
             return;

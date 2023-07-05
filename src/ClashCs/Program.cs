@@ -28,7 +28,7 @@ internal class Program
             .LogToTrace()
             .With(new Win32PlatformOptions()
             {
-                CompositionBackdropCornerRadius = 8f
+                WinUICompositionBackdropCornerRadius = 8f
             });
 
     }

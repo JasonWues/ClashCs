@@ -190,3 +190,4 @@ project.lock.json
 BenchmarkDotNet.Artifacts/
 
 dirs.sln
+/src/ClashCs/Config/localConfig
