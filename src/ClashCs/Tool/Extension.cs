@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@ public static class Extension
     public static void AddRange<T>(this ObservableCollection<T> observableCollection, IEnumerable<T> list,
         bool isRefresh = false)
     {
+        ArgumentNullException.ThrowIfNull(list);
+
         if (isRefresh)
         {
             observableCollection.Clear();
